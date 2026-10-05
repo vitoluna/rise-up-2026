@@ -132,3 +132,4 @@ document.getElementById('vsum').innerHTML =
     `<span><b>${fmt(totAb)}</b> abertos</span><span><b>${fmt(totRe)}</b> resolvidos</span><span><b>${(totRe / (totAb + totRe) * 100).toFixed(1).replace('.', ',')}%</b> de resolução no top 8</span>`;
 rosca(document.getElementById('donut'), severidade);
 conformidadeLista(document.getElementById('comp'), conformidade);
+
