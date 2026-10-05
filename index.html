@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEC VIEW — Dashboard (estático)</title>
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="logo">SEC VIEW</div>
+    <nav class="nav">
+      <a href="#" class="on"><span class="ic">▣</span>Dashboard</a>
+      <a href="#"><span class="ic">◉</span>Feed de Alertas</a>
+      <a href="#"><span class="ic">▤</span>FIM</a>
+      <a href="#"><span class="ic">≡</span>Regras Custom</a>
+      <a href="#"><span class="ic">▥</span>Compliance</a>
+      <a href="#"><span class="ic">◈</span>MITRE ATT&amp;CK</a>
+      <a href="#"><span class="ic">⚙</span>Configurações</a>
+    </nav>
+    <div class="user"><div class="av">HS</div><div><b>Helena Souza</b><small>ANALISTA SOC</small></div></div>
+  </aside>
+ 
+  <main>
+    <div class="top">
+      <div><h1>DASHBOARD</h1><p class="sub">Bem-vinda, Helena · visão geral do SOC nas últimas 24 horas</p></div>
+      <div class="status"><span class="dot"></span>Todos os coletores operando</div>
+    </div>
+ 
+    <section class="kpis">
+      <div class="card kpi"><small>Total de alertas</small><div class="row"><strong>2.847</strong></div><p>+140 alertas na última hora</p></div>
+      <div class="card kpi"><small>Alertas resolvidos</small><div class="row"><strong>1.523</strong><div class="ring" style="--p:53"><span>53%</span></div></div><p>53,5% de taxa de resolução</p></div>
+      <div class="card kpi"><small>Hosts monitorados</small><div class="row"><strong>84</strong></div><p>23 hosts com alertas ativos</p></div>
+      <div class="card kpi"><small>Eventos por hora</small><div class="row"><strong>12.340</strong></div><p>Coletados de 84 hosts</p></div>
+    </section>
+ 
+    <section class="grid">
+      <div class="card">
+        <div class="hd"><div><h2>Alertas e incidentes</h2><p class="sub">Últimas 24h, em intervalos de 4h</p></div>
+          <div class="lg"><span><i style="background:#1c229a"></i>Alertas</span><span><i style="background:#6844fc"></i>Incidentes confirmados</span></div></div>
+        <div id="line"></div>
+      </div>
+      <div class="card"><h2>Alertas por categoria</h2><p class="sub">Top 8 categorias de ameaça</p><div id="hbars"></div></div>
+    </section>
+ 
+    <section class="grid">
+      <div class="card">
+        <div class="hd"><div><h2>Abertos vs. resolvidos</h2><p class="sub">Por categoria de ameaça · top 8 das últimas 24h</p></div>
+          <div class="lg"><span><i class="g-open"></i>Abertos</span><span><i class="g-res"></i>Resolvidos</span></div></div>
+        <div id="vbars"></div>
+        <div id="vsum" class="vsum"></div>
+      </div>
+      <div class="card">
+        <h2>Severidade e hosts</h2><p class="sub">Distribuição dos alertas e alvos mais frequentes</p>
+        <div class="donut"><div class="wrap"><div id="donut"></div><div class="mid"><b>2.847</b>alertas</div></div>
+          <ul><li><i style="background:#dc2626"></i>Crítico (13%)</li><li><i style="background:#d97706"></i>Médio (22%)</li><li><i style="background:#8fa3c9"></i>Baixo / Info (65%)</li></ul></div>
+        <div class="hosts"><h3>Hosts mais atacados</h3>
+          <div><i class="t">W</i><span>host-web-03<small>Servidor web</small></span><em>1.240 alertas</em></div>
+          <div><i class="t">D</i><span>host-db-01<small>Banco de dados</small></span><em>980 alertas</em></div>
+          <div><i class="t">A</i><span>host-app-02<small>Aplicação</small></span><em>820 alertas</em></div></div>
+      </div>
+    </section>
+ 
+    <section class="grid">
+      <div class="card">
+        <div class="hd"><div><h2>Conformidade por framework</h2><p class="sub">Aderência simulada · controles atendidos</p></div>
+          <div class="lg"><span><i style="background:#0ca0d8"></i>Conforme ≥ 80%</span><span><i style="background:#4352c7"></i>Atenção 60–79%</span><span><i style="background:#6844fc"></i>Revisar &lt; 60%</span></div></div>
+        <div id="comp"></div>
+      </div>
+      <div class="card"><h2>Táticas MITRE ATT&amp;CK</h2><p class="sub">Alertas mapeados por tática</p>
+        <div class="heat">
+          <div class="c3">Acesso inicial<b>78</b></div><div class="c2">Execução<b>52</b></div><div class="c3">Persistência<b>64</b></div>
+          <div class="c2">Escalação<b>45</b></div><div class="c1">Evasão<b>38</b></div><div class="c1">Exfiltração<b>29</b></div>
+        </div></div>
+    </section>
+  </main>
+</div>
+<script src="js/script.js"></script>
+</body>
+</html>
