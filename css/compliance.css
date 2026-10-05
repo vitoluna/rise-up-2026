@@ -1,0 +1,176 @@
+:root {
+  --bg: #ffffff;
+  --sidebar-bg: #f4f4f5;
+  --card-bg: #f3f3f4;
+  --border: #e4e4e7;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #5046e5;
+  --accent-soft: #e0e4ff;
+  --ok: #16a34a;      /* verde: >= 80% */
+  --warn: #d97706;    /* laranja: < 80% */
+  --crit: #dc2626;    /* vermelho (barra mais alta) */
+  --track: #e4e4e9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.shell { display: flex; min-height: 100vh; }
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--sidebar-bg);
+  padding: 24px 12px;
+  border-right: 1px solid var(--border);
+}
+.brand { font-size: 18px; margin: 0 0 20px 12px; }
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar a {
+  padding: 9px 12px;
+  border-radius: 4px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+}
+.sidebar a:hover { background: #e9e9ec; }
+.sidebar a.active {
+  background: var(--accent-soft);
+  color: #3730a3;
+  font-weight: 700;
+}
+
+/* ---------- Conteúdo ---------- */
+.content {
+  flex: 1;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1100px;
+}
+.page-header h1 { font-size: 18px; }
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 18px;
+  background: var(--bg);
+}
+.panel h2 { font-size: 13px; font-weight: 700; }
+.muted { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+/* ---------- Cards de framework ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.card {
+  background: var(--card-bg);
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+.card .label { color: var(--muted); font-size: 12px; }
+.card .value { font-size: 26px; font-weight: 800; margin: 6px 0 12px; }
+.progress {
+  height: 6px;
+  background: var(--track);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.progress-bar.ok   { background: var(--ok); }
+.progress-bar.warn { background: var(--warn); }
+
+/* ---------- Gráfico de barras ---------- */
+.chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 24px;
+  height: 200px;
+  margin-top: 16px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+.bar-col {
+  flex: 1;
+  max-width: 120px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.bar-count { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  transition: height 0.6s ease;
+}
+.bar.crit { background: var(--crit); }
+.bar.warn { background: var(--warn); }
+.bar.ok   { background: var(--ok); }
+.bar-labels {
+  display: flex;
+  justify-content: space-around;
+  gap: 24px;
+  padding: 6px 24px 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.bar-labels span { flex: 1; max-width: 120px; text-align: center; }
+
+/* ---------- Exportação ---------- */
+.export {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.export-actions { display: flex; gap: 12px; }
+.btn {
+  background: var(--bg);
+  border: 1px solid #c9c9d1;
+  border-radius: 4px;
+  padding: 8px 22px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+.btn:hover { background: #f4f4f5; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.print-only { display: none; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 800px) {
+  .shell { flex-direction: column; }
+  .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); padding: 12px; }
+  .brand { margin-bottom: 8px; }
+  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+  .content { padding: 20px 16px; }
+  .cards { grid-template-columns: 1fr; }
+  .export { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- Impressão (Exportar PDF) ---------- */
+@media print {
+  .sidebar, .no-print { display: none !important; }
+  .print-only { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .content { padding: 0; max-width: none; }
+  .panel, .card { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
