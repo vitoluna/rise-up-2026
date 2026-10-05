@@ -75,5 +75,31 @@ window.SecView = (() => {
     });
   }
 
-  return { CHAVES, ler, gravar, remover, mostrarAlerta, esconderAlerta, configurarOlhos };
+  /* ---------- Sessão (simulada) ---------- */
+  // O login grava { usuario, entrada } no sessionStorage; as telas internas
+  // chamam exigirSessao() e voltam para o login se não houver sessão.
+  function sessaoAtiva() {
+    try {
+      const dados = JSON.parse(sessionStorage.getItem(CHAVES.sessao) || "null");
+      return Boolean(dados && dados.usuario);
+    } catch {
+      return false;
+    }
+  }
+
+  function exigirSessao(urlLogin = "login.html") {
+    if (!sessaoAtiva()) window.location.replace(urlLogin);
+
+    // Voltar pelo botão do navegador pode reabrir a tela do cache após o logout
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted && !sessaoAtiva()) window.location.replace(urlLogin);
+    });
+  }
+
+  function sair(urlLogin = "login.html") {
+    try { sessionStorage.removeItem(CHAVES.sessao); } catch { /* ignora */ }
+    window.location.href = urlLogin;
+  }
+
+  return { CHAVES, ler, gravar, remover, mostrarAlerta, esconderAlerta, configurarOlhos, sessaoAtiva, exigirSessao, sair };
 })();

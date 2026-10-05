@@ -12,7 +12,7 @@
     senhaDemo: "@Sec123",             // senha inicial (pode ser trocada em "Redefinir senha")
     falhasParaBloquear: 4,            // a 4ª falha bloqueia → após a 3ª o usuário é avisado
     bloqueioSegundos: 60,             // duração do bloqueio
-    destino: "dashboard.html",        // para onde ir após logar
+    destino: "index.html",            // para onde ir após logar (dashboard)
   };
 
   /* ---------- Elementos ---------- */

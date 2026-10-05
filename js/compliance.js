@@ -4,56 +4,19 @@
 
 /* ---------- Dados ---------- */
 
-// Aderência simulada por framework
-const FRAMEWORKS = [
-  { nome: "PCI-DSS", valor: 87 },
-  { nome: "GDPR", valor: 62 },
-  { nome: "HIPAA", valor: 94 },
-];
+// Dados compartilhados com Dashboard e Feed (js/dados.js)
+const DADOS = window.SecViewDados;
+
+// Cards de aderência: só os frameworks marcados como "destaque"
+const FRAMEWORKS = DADOS.FRAMEWORKS.filter((f) => f.destaque);
 
 const LIMITE_VERDE = 80; // >= 80% verde, abaixo laranja
 
 // Categorias exibidas no gráfico (ordem fixa)
 const CATEGORIAS = ["Acesso", "Dados", "Rede", "Sistema"];
 
-// Eventos de exemplo (últimos 30 dias). Quando o Web Worker estiver
-// integrado, basta substituir este array pelos eventos reais do event bus.
-const EVENTOS = [
-  // Acesso
-  { dia: 1,  categoria: "Acesso",  origem: "host-web-03", descricao: "Tentativa de login falha (5x)", severidade: "Crítico" },
-  { dia: 2,  categoria: "Acesso",  origem: "host-web-01", descricao: "Login fora do horário", severidade: "Médio" },
-  { dia: 3,  categoria: "Acesso",  origem: "host-db-01",  descricao: "Escalação de privilégio", severidade: "Crítico" },
-  { dia: 5,  categoria: "Acesso",  origem: "host-app-02", descricao: "Nova conta criada", severidade: "Médio" },
-  { dia: 6,  categoria: "Acesso",  origem: "host-web-03", descricao: "Brute force detectado", severidade: "Crítico" },
-  { dia: 8,  categoria: "Acesso",  origem: "host-web-02", descricao: "Tentativa de login falha (8x)", severidade: "Crítico" },
-  { dia: 10, categoria: "Acesso",  origem: "host-app-01", descricao: "Login de IP desconhecido", severidade: "Médio" },
-  { dia: 12, categoria: "Acesso",  origem: "host-db-01",  descricao: "Senha alterada fora de política", severidade: "Médio" },
-  { dia: 15, categoria: "Acesso",  origem: "host-web-01", descricao: "Tentativa de login falha (6x)", severidade: "Crítico" },
-  { dia: 18, categoria: "Acesso",  origem: "host-app-02", descricao: "Sessão simultânea suspeita", severidade: "Médio" },
-  { dia: 22, categoria: "Acesso",  origem: "host-web-03", descricao: "Brute force detectado", severidade: "Crítico" },
-  { dia: 27, categoria: "Acesso",  origem: "host-db-02",  descricao: "Conta privilegiada usada", severidade: "Médio" },
-  // Dados
-  { dia: 4,  categoria: "Dados",   origem: "host-db-01",  descricao: "Alteração em /etc/passwd", severidade: "Crítico" },
-  { dia: 9,  categoria: "Dados",   origem: "host-db-02",  descricao: "Consulta massiva a tabela sensível", severidade: "Médio" },
-  { dia: 14, categoria: "Dados",   origem: "host-app-01", descricao: "Arquivo de log removido", severidade: "Médio" },
-  { dia: 19, categoria: "Dados",   origem: "host-db-01",  descricao: "Dump de banco não autorizado", severidade: "Crítico" },
-  { dia: 24, categoria: "Dados",   origem: "host-app-02", descricao: "Download volumoso de dados", severidade: "Médio" },
-  { dia: 28, categoria: "Dados",   origem: "host-db-02",  descricao: "Alteração em arquivo crítico", severidade: "Médio" },
-  // Rede
-  { dia: 1,  categoria: "Rede",    origem: "host-web-01", descricao: "Tráfego incomum porta 4444", severidade: "Médio" },
-  { dia: 3,  categoria: "Rede",    origem: "host-web-02", descricao: "Varredura de portas", severidade: "Médio" },
-  { dia: 7,  categoria: "Rede",    origem: "host-app-01", descricao: "DNS tunnel suspeito", severidade: "Crítico" },
-  { dia: 11, categoria: "Rede",    origem: "host-web-03", descricao: "Conexão para IP em blocklist", severidade: "Crítico" },
-  { dia: 13, categoria: "Rede",    origem: "host-web-01", descricao: "Tráfego incomum porta 4444", severidade: "Médio" },
-  { dia: 17, categoria: "Rede",    origem: "host-app-02", descricao: "Exfiltração C2 suspeita", severidade: "Crítico" },
-  { dia: 21, categoria: "Rede",    origem: "host-web-02", descricao: "Pico de tráfego anômalo", severidade: "Médio" },
-  { dia: 25, categoria: "Rede",    origem: "host-web-01", descricao: "Varredura de portas", severidade: "Médio" },
-  { dia: 29, categoria: "Rede",    origem: "host-app-01", descricao: "Porta fora da lista permitida", severidade: "Médio" },
-  // Sistema
-  { dia: 6,  categoria: "Sistema", origem: "host-app-02", descricao: "Novo processo iniciado", severidade: "Info" },
-  { dia: 16, categoria: "Sistema", origem: "host-web-03", descricao: "Serviço reiniciado", severidade: "Info" },
-  { dia: 23, categoria: "Sistema", origem: "host-db-01",  descricao: "PowerShell executado", severidade: "Médio" },
-];
+// Eventos dos últimos 30 dias (mesma fonte do Feed de alertas)
+const EVENTOS = DADOS.EVENTOS;
 
 /* ---------- Helpers ---------- */
 
@@ -174,7 +137,7 @@ function gerarCSV() {
   linhas.push(["Eventos"]);
   linhas.push(["Há (dias)", "Categoria", "Origem", "Descrição", "Severidade"]);
   EVENTOS.forEach((e) =>
-    linhas.push([e.dia, e.categoria, e.origem, e.descricao, e.severidade])
+    linhas.push([e.dia, e.categoria, e.origem, e.descricao, DADOS.SEVERIDADES[e.severidade]])
   );
 
   // ";" como separador e BOM para o Excel brasileiro abrir com acentos corretos

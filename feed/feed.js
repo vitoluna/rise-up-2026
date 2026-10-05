@@ -1,28 +1,18 @@
 /* ---------- Configuração ---------- */
-const SEVERIDADES = {
-  critico: "Crítico",
-  alto: "Alto",
-  medio: "Médio",
-  info: "Info",
-};
+// Severidades e eventos vêm de js/dados.js (compartilhado com Dashboard e Compliance)
+const SEVERIDADES = window.SecViewDados.SEVERIDADES;
 const MAX_EVENTOS = 100;   // limite do feed
 const INTERVALO_MS = 2500; // frequência da simulação
 
 /* ---------- Dados de exemplo ----------
+   Os modelos vêm dos eventos compartilhados (hosts e descrições iguais aos do Compliance).
    Troque gerarEvento() pela sua fonte real (fetch, WebSocket, SSE).
    Formato: { id, data: Date, evento, origem, severidade } */
-const MODELOS = [
-  { evento: "Falha de autenticação repetida", origem: "auth-service", severidade: "alto" },
-  { evento: "Banco de dados sem resposta", origem: "db-primario", severidade: "critico" },
-  { evento: "Uso de CPU acima de 90%", origem: "api-gateway", severidade: "medio" },
-  { evento: "Deploy concluído", origem: "ci-cd", severidade: "info" },
-  { evento: "Fila de mensagens acumulando", origem: "worker-pagamentos", severidade: "alto" },
-  { evento: "Certificado expira em 7 dias", origem: "proxy-borda", severidade: "medio" },
-  { evento: "Serviço indisponível", origem: "checkout", severidade: "critico" },
-  { evento: "Backup finalizado", origem: "storage", severidade: "info" },
-  { evento: "Latência acima do limite", origem: "api-gateway", severidade: "medio" },
-  { evento: "Disco com 95% de uso", origem: "db-replica", severidade: "alto" },
-];
+const MODELOS = window.SecViewDados.EVENTOS.map((e) => ({
+  evento: e.descricao,
+  origem: e.origem,
+  severidade: e.severidade,
+}));
 
 let contador = 0;
 function gerarEvento() {

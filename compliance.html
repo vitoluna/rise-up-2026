@@ -5,19 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compliance — SecView</title>
   <link rel="stylesheet" href="css/compliance.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
 </head>
 <body>
   <div class="shell">
-    <!-- Sidebar (mesmo padrão das outras telas) -->
+    <!-- Sidebar (menu único gerado por js/nav.js) -->
     <aside class="sidebar">
-      <h2 class="brand">SecView</h2>
-      <nav aria-label="Navegação principal">
-        <a href="#">Feed de alertas</a>
-        <a href="#">FIM</a>
-        <a href="#">MITRE ATT&amp;CK</a>
-        <a href="#">Regras custom</a>
-        <a href="#" class="active" aria-current="page">Compliance</a>
-      </nav>
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="compliance" data-base=""></nav>
     </aside>
 
     <main class="content">
@@ -49,6 +46,8 @@
     </main>
   </div>
 
+  <script src="js/dados.js"></script>
+  <script src="js/nav.js"></script>
   <script src="js/compliance.js"></script>
 </body>
 </html>

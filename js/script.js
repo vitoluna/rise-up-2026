@@ -26,15 +26,14 @@ const abertosResolvidos = [
 
 const severidade = [['#dc2626', 13], ['#d97706', 22], ['#8fa3c9', 65]];
 
+// Dados compartilhados com Feed e Compliance (js/dados.js)
+const DADOS = window.SecViewDados;
+
 // [framework, % de aderência, controles atendidos, total de controles]
-const conformidade = [
-    ['PCI-DSS', 87, 52, 60],
-    ['GDPR', 62, 31, 50],
-    ['HIPAA', 94, 47, 50],
-    ['ISO 27001', 78, 89, 114],
-    ['NIST CSF', 71, 77, 108],
-    ['SOC 2', 83, 53, 64]
-];
+const conformidade = DADOS.FRAMEWORKS.map(f => [f.nome, f.valor, f.atendidos, f.total]);
+
+// 3 hosts com mais alertas
+const topHosts = [...DADOS.HOSTS].sort((a, b) => b.alertas - a.alertas).slice(0, 3);
 
 const fmt = n => n.toLocaleString('pt-BR');
 
@@ -132,4 +131,7 @@ document.getElementById('vsum').innerHTML =
     `<span><b>${fmt(totAb)}</b> abertos</span><span><b>${fmt(totRe)}</b> resolvidos</span><span><b>${(totRe / (totAb + totRe) * 100).toFixed(1).replace('.', ',')}%</b> de resolução no top 8</span>`;
 rosca(document.getElementById('donut'), severidade);
 conformidadeLista(document.getElementById('comp'), conformidade);
+document.getElementById('hosts').insertAdjacentHTML('beforeend', topHosts.map(h =>
+    `<div><i class="t">${h.sigla}</i><span>${h.nome}<small>${h.funcao}</small></span><em>${fmt(h.alertas)} alertas</em></div>`
+).join(''));
 

@@ -3,22 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SEC VIEW — Dashboard (estático)</title>
+<title>Dashboard — SecView</title>
 <link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/nav.css">
+<script src="js/comum.js"></script>
+<script>SecView.exigirSessao("login.html");</script>
 </head>
 <body>
 <div class="app">
   <aside class="side">
     <div class="logo">SEC VIEW</div>
-    <nav class="nav">
-      <a href="#" class="on"><span class="ic">▣</span>Dashboard</a>
-      <a href="#"><span class="ic">◉</span>Feed de Alertas</a>
-      <a href="#"><span class="ic">▤</span>FIM</a>
-      <a href="#"><span class="ic">≡</span>Regras Custom</a>
-      <a href="#"><span class="ic">▥</span>Compliance</a>
-      <a href="#"><span class="ic">◈</span>MITRE ATT&amp;CK</a>
-      <a href="#"><span class="ic">⚙</span>Configurações</a>
-    </nav>
+    <nav class="nav" data-secview-nav="dashboard" data-base="" data-icones></nav>
     <div class="user"><div class="av">HS</div><div><b>Helena Souza</b><small>ANALISTA SOC</small></div></div>
   </aside>
  
@@ -55,10 +50,7 @@
         <h2>Severidade e hosts</h2><p class="sub">Distribuição dos alertas e alvos mais frequentes</p>
         <div class="donut"><div class="wrap"><div id="donut"></div><div class="mid"><b>2.847</b>alertas</div></div>
           <ul><li><i style="background:#dc2626"></i>Crítico (13%)</li><li><i style="background:#d97706"></i>Médio (22%)</li><li><i style="background:#8fa3c9"></i>Baixo / Info (65%)</li></ul></div>
-        <div class="hosts"><h3>Hosts mais atacados</h3>
-          <div><i class="t">W</i><span>host-web-03<small>Servidor web</small></span><em>1.240 alertas</em></div>
-          <div><i class="t">D</i><span>host-db-01<small>Banco de dados</small></span><em>980 alertas</em></div>
-          <div><i class="t">A</i><span>host-app-02<small>Aplicação</small></span><em>820 alertas</em></div></div>
+        <div class="hosts" id="hosts"><h3>Hosts mais atacados</h3></div></div>
       </div>
     </section>
  
@@ -76,6 +68,8 @@
     </section>
   </main>
 </div>
+<script src="js/dados.js"></script>
+<script src="js/nav.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

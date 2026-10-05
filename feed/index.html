@@ -3,24 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alertas · Secview</title>
+  <title>Feed de alertas — SecView</title>
   <link rel="stylesheet" href="style.css">
- 
+  <link rel="stylesheet" href="../css/nav.css">
+  <script src="../js/comum.js"></script>
+  <script>SecView.exigirSessao("../login.html");</script>
 </head>
 <body>
 <div class="site">
 
   <aside class="sidebar">
-    <a href="/" class="marca">Secview</a>
-    <nav aria-label="Principal">
-      <p class="menu-titulo">Menu</p>
-      <ul>
-        <li><a href="/">Painel</a></li>
-        <li><a href="/alertas" aria-current="page">Alertas</a></li>
-        <li><a href="/relatorios">Relatórios</a></li>
-        <li><a href="/configuracoes">Configurações</a></li>
-      </ul>
-    </nav>
+    <a href="../index.html" class="marca">SEC VIEW</a>
+    <nav data-secview-nav="feed" data-base="../"></nav>
   </aside>
 
   <div class="principal">
@@ -28,7 +22,7 @@
       <div class="hero-in">
         <div>
           <h1>Alertas em tempo real</h1>
-          <p>Acompanhe o que acontece nos seus serviços e priorize o que está crítico primeiro.</p>
+          <p>Acompanhe o que acontece nos seus hosts e priorize o que está crítico primeiro.</p>
         </div>
         <div class="placar" id="placar" aria-live="polite">
           <span class="placar-n" id="placar-n">0</span>
@@ -86,13 +80,15 @@
 
     <footer class="rodape">
       <div class="rodape-in">
-        <span>Sentinela · monitoramento de serviços</span>
+        <span>SecView · monitoramento de segurança</span>
         <span id="limite"></span>
       </div>
     </footer>
   </div>
 
 </div>
+<script src="../js/dados.js"></script>
+<script src="../js/nav.js"></script>
 <script src="feed.js"></script>
 </body>
 </html>
