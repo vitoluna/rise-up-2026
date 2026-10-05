@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feed de alertas — SecView</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <script src="../js/comum.js"></script>
+  <script>SecView.exigirSessao("../login.html");</script>
+</head>
+<body>
+<div class="site">
+
+  <aside class="sidebar">
+    <a href="../index.html" class="marca">SEC VIEW</a>
+    <nav data-secview-nav="feed" data-base="../"></nav>
+  </aside>
+
+  <div class="principal">
+    <header class="hero">
+      <div class="hero-in">
+        <div>
+          <h1>Alertas em tempo real</h1>
+          <p>Acompanhe o que acontece nos seus hosts e priorize o que está crítico primeiro.</p>
+        </div>
+        <div class="placar" id="placar" aria-live="polite">
+          <span class="placar-n" id="placar-n">0</span>
+          <span class="placar-t" id="placar-t">críticos</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="conteudo">
+      <section class="cards" aria-label="Resumo dos alertas">
+        <article class="card">
+          <h2>Total de alertas</h2>
+          <p class="card-n" id="total">0</p>
+          <p class="card-sub">no feed agora</p>
+        </article>
+        <article class="card">
+          <h2>Por severidade</h2>
+          <ul class="sev-lista" id="sev-lista"></ul>
+        </article>
+        <article class="card" id="card-ultimo">
+          <h2>Último alerta</h2>
+          <div id="ultimo"></div>
+        </article>
+      </section>
+
+      <div class="barra">
+        <p class="status">
+          <span class="ponto" id="ponto" aria-hidden="true"></span>
+          <span id="status-txt">Ao vivo</span>
+          <span class="atual" id="atual"></span>
+        </p>
+        <div class="controles">
+          <label class="campo">
+            <span>Severidade</span>
+            <select id="filtro"></select>
+          </label>
+          <button type="button" class="botao" id="btn-pausa" aria-pressed="false">Pausar</button>
+        </div>
+      </div>
+
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Hora</th>
+              <th scope="col">Evento</th>
+              <th scope="col">Origem</th>
+              <th scope="col">Severidade</th>
+            </tr>
+          </thead>
+          <tbody id="corpo"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      <div class="rodape-in">
+        <span>SecView · monitoramento de segurança</span>
+        <span id="limite"></span>
+      </div>
+    </footer>
+  </div>
+
+</div>
+<script src="../js/dados.js"></script>
+<script src="../js/nav.js"></script>
+<script src="feed.js"></script>
+</body>
+</html>

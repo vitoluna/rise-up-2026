@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compliance — SecView</title>
+  <link rel="stylesheet" href="css/compliance.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar (menu único gerado por js/nav.js) -->
+    <aside class="sidebar">
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="compliance" data-base=""></nav>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <h1>Painel de compliance</h1>
+        <p class="print-only" id="print-date"></p>
+      </header>
+
+      <!-- 3 cards de aderência -->
+      <section class="cards" id="frameworks" aria-label="Aderência por framework"></section>
+
+      <!-- Gráfico de barras -->
+      <section class="panel" aria-labelledby="chart-title">
+        <h2 id="chart-title">Incidentes por categoria (últimos 30 dias)</h2>
+        <div class="chart" id="chart" role="img" aria-label="Gráfico de barras de incidentes por categoria"></div>
+      </section>
+
+      <!-- Exportação -->
+      <section class="panel export no-print" aria-labelledby="export-title">
+        <div>
+          <h2 id="export-title">Exportar relatório</h2>
+          <p class="muted">Gerado no navegador, sem envio a servidor</p>
+        </div>
+        <div class="export-actions">
+          <button type="button" id="btn-pdf" class="btn">PDF</button>
+          <button type="button" id="btn-csv" class="btn">CSV</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/compliance.js"></script>
+</body>
+</html>
