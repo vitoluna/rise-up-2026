@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redefinir senha — SecView</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/jpeg" href="css/logoSite.JPG" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="cartao">
+    <h1 class="marca">SEC VIEW</h1>
+    <h2 class="titulo">Redefinir Senha</h2>
+
+    <!-- Avatar -->
+    <img class="avatar" src="css/logoLogin.JPG" alt="SecView" width="190" height="190" />
+
+    <form id="form-redefinir" novalidate>
+      <div class="campo" id="campo-senha">
+        <label for="senha">Senha</label>
+        <div class="entrada">
+          <input type="password" id="senha" name="senha" placeholder="Crie uma nova senha"
+                 autocomplete="new-password" aria-describedby="requisitos" />
+          <button type="button" class="olho" data-olho="senha" aria-label="Mostrar senha" aria-pressed="false">
+            <svg class="olho-fechado" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
+              <circle cx="12" cy="12" r="3" />
+              <path d="M3 3l18 18" />
+            </svg>
+            <svg class="olho-aberto" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="campo" id="campo-confirmar">
+        <label for="confirmar">Confirmar senha</label>
+        <div class="entrada">
+          <input type="password" id="confirmar" name="confirmar" placeholder="Repita a nova senha"
+                 autocomplete="new-password" aria-describedby="erro-confirmar" />
+          <button type="button" class="olho" data-olho="confirmar" aria-label="Mostrar senha" aria-pressed="false">
+            <svg class="olho-fechado" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
+              <circle cx="12" cy="12" r="3" />
+              <path d="M3 3l18 18" />
+            </svg>
+            <svg class="olho-aberto" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+        <p class="msg-campo" id="erro-confirmar" role="alert"></p>
+      </div>
+
+      <section class="requisitos" id="requisitos" aria-live="polite">
+        <h3>Sua senha deve conter:</h3>
+        <ul id="lista-requisitos"></ul>
+      </section>
+
+      <div class="acoes">
+        <button type="submit" class="botao" id="btn-confirmar" disabled>Confirmar</button>
+      </div>
+
+      <div class="rodape-form">
+        <a class="link" href="login.html">Voltar ao login</a>
+      </div>
+    </form>
+
+    <!-- Exibido após redefinir com sucesso -->
+    <section class="sucesso" id="sucesso" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="m8 12.5 3 3 5-6" />
+      </svg>
+      <h3>Senha alterada com sucesso</h3>
+      <p>Redirecionando para o login…</p>
+      <a class="link" href="login.html?senha=alterada">Ir agora</a>
+    </section>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/redefinir.js"></script>
+</body>
+</html>

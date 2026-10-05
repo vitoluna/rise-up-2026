@@ -1,0 +1,449 @@
+/* ==========================================================
+   SecView — estilos compartilhados (Login + Redefinir senha)
+   Paleta extraída das telas MOBILE LOGIN do Figma
+   ========================================================== */
+
+:root {
+  --navy: #232c6e;          /* títulos, botão, ícones */
+  --navy-escuro: #161c4f;   /* fundo da página no desktop */
+  --navy-hover: #1a2158;
+  --periwinkle: #c5ccff;    /* círculo do avatar */
+  --label: #4a55d6;         /* rótulos dos campos */
+  --borda: #d3d7e8;
+  --placeholder: #7b809a;
+  --texto: #1f2447;
+  --erro: #d33f49;
+  --erro-fundo: #fdecee;
+  --ok: #1e9e5a;
+  --ok-fundo: #e8f7ef;
+  --branco: #ffffff;
+
+  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--navy-escuro);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Cartão (a "tela mobile" do Figma) ---------- */
+
+.cartao {
+  width: min(100%, 420px);
+  background: var(--branco);
+  border-radius: 24px;
+  padding: 32px 40px 44px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.marca {
+  margin: 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--navy);
+}
+
+.titulo {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.avatar {
+  display: block;
+  width: 190px;
+  height: 190px;
+  margin: 20px auto 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ---------- Formulário ---------- */
+
+.campo { margin-bottom: 18px; }
+
+.campo label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label);
+}
+
+.entrada {
+  position: relative;
+}
+
+.entrada input {
+  width: 100%;
+  height: 44px;
+  padding: 0 44px 0 12px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--branco);
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.entrada input::placeholder { color: var(--placeholder); }
+
+.entrada input:hover:not(:disabled) { border-color: #aab0d0; }
+
+.entrada input:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(74, 85, 214, 0.22);
+}
+
+.entrada input:disabled {
+  background: #f2f3f8;
+  color: var(--placeholder);
+  cursor: not-allowed;
+}
+
+.campo.invalido input {
+  border-color: var(--erro);
+}
+
+.campo.invalido input:focus {
+  box-shadow: 0 0 0 3px rgba(211, 63, 73, 0.2);
+}
+
+.msg-campo {
+  margin: 4px 0 0;
+  min-height: 0;
+  font-size: 12px;
+  color: var(--erro);
+}
+
+/* ---------- Olhinho (mostrar / ocultar senha) ---------- */
+/* aria-pressed="false" → senha oculta → olho FECHADO (riscado)
+   aria-pressed="true"  → senha visível → olho ABERTO          */
+
+.olho {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0 6px 6px 0;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.olho:hover { color: var(--label); }
+
+.olho:focus-visible {
+  outline: 2px solid var(--label);
+  outline-offset: -3px;
+}
+
+.olho svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.olho[aria-pressed="false"] .olho-aberto { display: none; }
+.olho[aria-pressed="true"] .olho-fechado { display: none; }
+
+/* ---------- Botão ---------- */
+
+.acoes {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.botao {
+  min-width: 150px;
+  height: 44px;
+  padding: 0 32px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--branco);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+}
+
+.botao:hover:not(:disabled) { background: var(--navy-hover); }
+.botao:active:not(:disabled) { transform: translateY(1px); }
+
+.botao:focus-visible {
+  outline: 3px solid var(--periwinkle);
+  outline-offset: 2px;
+}
+
+.botao:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- Alertas (erro / crítico / ok) ---------- */
+
+.alerta {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 22px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--erro-fundo);
+  color: var(--erro);
+  font-size: 13px;
+}
+
+.alerta svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.alerta strong { display: block; font-weight: 600; }
+.alerta span { display: block; font-size: 12px; }
+
+/* Última tentativa antes do bloqueio: mais destaque */
+.alerta--critico {
+  border-left: 4px solid var(--erro);
+  background: #fbe0e3;
+}
+
+.alerta--critico span { font-weight: 600; }
+
+.alerta--ok {
+  background: var(--ok-fundo);
+  color: #157a45;
+}
+
+/* ---------- Links ---------- */
+
+.link {
+  color: var(--label);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link:hover { text-decoration: underline; }
+
+.link:focus-visible {
+  outline: 2px solid var(--label);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.rodape-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+/* ---------- Requisitos de senha (tela de redefinir) ---------- */
+
+.requisitos { margin: 4px 0 0; }
+
+.requisitos h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--label);
+}
+
+.requisitos ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.requisitos li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 12px;
+  color: var(--placeholder);
+  transition: color 0.15s;
+}
+
+.requisitos li svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.requisitos li[data-estado="ok"] { color: var(--ok); }
+.requisitos li[data-estado="falha"] { color: var(--erro); }
+
+/* ---------- Tela de sucesso ---------- */
+
+.sucesso {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.sucesso svg {
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: var(--ok);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sucesso h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  color: var(--navy);
+}
+
+.sucesso p {
+  margin: 0;
+  color: var(--placeholder);
+}
+
+/* ---------- Mobile: ocupa a tela toda, como no Figma ---------- */
+
+@media (max-width: 480px) {
+  body {
+    display: block;
+    padding: 0;
+    background: var(--branco);
+  }
+
+  .cartao {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 28px 28px 40px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ---------- Texto só para leitores de tela ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Entrar com Google / Apple ---------- */
+
+.divisor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--label);
+}
+
+.divisor::before,
+.divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--borda);
+}
+
+.social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--branco);
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.btn-social svg { width: 20px; height: 20px; flex: none; }
+
+.btn-social:hover:not(:disabled) {
+  border-color: var(--navy);
+  background: #f5f6fd;
+}
+
+.btn-social:focus-visible {
+  outline: 3px solid var(--periwinkle);
+  outline-offset: 2px;
+}
+
+.btn-social:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
