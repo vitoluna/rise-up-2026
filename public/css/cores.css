@@ -1,0 +1,86 @@
+/* ==========================================================
+   SecView — paleta padrão
+   Derivada do Feed de alertas. Todas as telas carregam este
+   arquivo antes do seu próprio CSS e usam apenas estas variáveis.
+   Para mudar uma cor do projeto, mude aqui.
+   ========================================================== */
+
+:root {
+  /* Base (superfícies e texto) */
+  --tinta: #12202e;            /* menu lateral, faixas escuras */
+  --tinta-clara: #1d3346;      /* hover sobre superfícies escuras */
+  --texto: #1d2733;
+  --suave: #5d6b7a;            /* texto secundário, rótulos */
+  --linha: #d9e0e7;            /* bordas e trilhos de barra */
+  --linha-forte: #9aa8b6;      /* bordas em hover e botões */
+  --fundo: #eef2f5;
+  --cartao: #ffffff;
+  --faixa: #f5f8fa;            /* cabeçalhos de tabela, cards secundários */
+  --texto-claro: #f2f6f9;      /* texto sobre fundo escuro */
+  --texto-claro-suave: #b8c6d3;
+
+  /* Marca e ação */
+  --destaque: #0b6e6e;
+  --destaque-escuro: #0b4f4f;
+  --destaque-claro: #4fc3c3;   /* realce sobre fundo escuro */
+  --destaque-fundo: #dcefef;
+  --foco: #4a8cff;             /* anel de foco do teclado */
+
+  /* Estados */
+  --sucesso: #1f9d55;
+  --sucesso-texto: #157a45;
+  --sucesso-fundo: #e6f6ee;
+
+  /* Severidade (mesma escala em todo o projeto) */
+  --critico: #c62828;
+  --critico-texto: #c62828;
+  --critico-fundo: #fdeaea;
+  --critico-fundo-forte: #f8d4d4;  /* alerta de destaque (ex.: último aviso antes do bloqueio) */
+  --critico-claro: #ff8787;        /* crítico sobre fundo escuro */
+  --critico-borda-escura: #ff6b6b;
+
+  --alto: #c75b00;
+  --alto-texto: #9a4500;
+  --alto-fundo: #fff0e0;
+
+  --medio: #d4a900;
+  --medio-texto: #8a6d00;
+  --medio-fundo: #fff8d6;
+
+  --info: #7b848f;
+  --info-texto: #5f6670;
+  --info-fundo: #eef0f2;
+}
+
+/* Modo escuro — segue o sistema/navegador, igual em todas as telas */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texto: #e6ebf0;
+    --suave: #9aa8b6;
+    --linha: #2a3744;
+    --linha-forte: #46566670;
+    --fundo: #0d141b;
+    --cartao: #131d27;
+    --faixa: #182431;
+    --destaque: var(--destaque-claro);
+    --destaque-escuro: #0d8f8f;
+    --destaque-fundo: #163535;
+
+    --critico-fundo: #3a1a1a;
+    --critico-fundo-forte: #4a1f1f;
+    --critico: var(--critico-claro);
+    --critico-texto: var(--critico-claro);
+
+    --alto-fundo: #3a2a12;
+    --alto-texto: #f0a860;
+
+    --medio-fundo: #3a3312;
+    --medio-texto: #f0d060;
+
+    --info-fundo: #262e36;
+    --info-texto: #9aa8b6;
+
+    --sucesso-fundo: #163524;
+    --sucesso-texto: #4ad080;
+  }
+}

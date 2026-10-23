@@ -1,0 +1,5 @@
+/* Itens especiais do menu lateral (js/nav.js) — vale para as 3 telas */
+[data-secview-nav] a.nav-off { opacity: .45; cursor: not-allowed; }
+[data-secview-nav] a.nav-off:hover { background: transparent; }
+[data-secview-nav] .nav-breve { margin-left: auto; font-size: 10px; font-weight: 400; }
+[data-secview-nav] a.nav-sair { margin-top: 14px; }

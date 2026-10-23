@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compliance PCI-DSS — SecView</title>
+  <link rel="stylesheet" href="css/cores.css" />
+  <link rel="stylesheet" href="css/compliance.css" />
+  <link rel="stylesheet" href="css/pci.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar (menu único gerado por js/nav.js) -->
+    <aside class="sidebar">
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="compliance" data-base=""></nav>
+    </aside>
+
+    <main class="content">
+      <header class="page-header pci-topo">
+        <div>
+          <h1>Compliance PCI-DSS</h1>
+          <p class="muted">PCI-DSS v4.0 · aderência por requisito, com base nos eventos centralizados pela plataforma</p>
+          <p class="print-only" id="print-date"></p>
+        </div>
+        <div class="filtros no-print">
+          <label class="filtro">
+            <span>Período dos eventos</span>
+            <select id="periodo">
+              <option value="7">Últimos 7 dias</option>
+              <option value="15">Últimos 15 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <!-- Indicadores gerais -->
+      <section class="cards" id="kpis" aria-label="Indicadores gerais do PCI-DSS"></section>
+
+      <!-- Visão geral: rosca + objetivos -->
+      <section class="panel visao" aria-labelledby="visao-titulo">
+        <h2 class="secao-titulo" id="visao-titulo">Visão geral da aderência</h2>
+        <div class="visao-corpo">
+          <div class="rosca-box" id="rosca"></div>
+          <div class="objetivos-box">
+            <p class="muted">Aderência por objetivo. Clique para filtrar os requisitos abaixo.</p>
+            <div id="objetivos"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Requisitos -->
+      <section aria-labelledby="req-titulo">
+        <div class="secao-topo">
+          <div>
+            <h2 class="secao-titulo" id="req-titulo">Requisitos</h2>
+            <p class="muted" id="req-sub">Clique em um requisito para ver os eventos relacionados</p>
+          </div>
+          <div class="barra-req no-print">
+            <div class="seg" role="group" aria-label="Modo de visualização">
+              <button type="button" class="seg-btn" data-view="cartoes" aria-pressed="true">Cartões</button>
+              <button type="button" class="seg-btn" data-view="lista" aria-pressed="false">Lista</button>
+            </div>
+            <label class="filtro">
+              <span>Ordenar por</span>
+              <select id="ordem">
+                <option value="numero" selected>Número do requisito</option>
+                <option value="aderencia">Menor aderência</option>
+                <option value="eventos">Mais eventos</option>
+              </select>
+            </label>
+            <label class="filtro">
+              <span>Mostrar</span>
+              <select id="filtro-status">
+                <option value="todos" selected>Todos</option>
+                <option value="atencao">Só os que precisam de atenção</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <ul class="legenda" aria-label="Legenda de status">
+          <li><i class="sw ok"></i>Conforme ≥ 80%</li>
+          <li><i class="sw warn"></i>Atenção 60–79%</li>
+          <li><i class="sw bad"></i>Revisar &lt; 60%</li>
+        </ul>
+        <div id="reqs"></div>
+      </section>
+
+      <!-- Detalhe do requisito -->
+      <section class="panel" id="detalhe" aria-live="polite" aria-labelledby="detalhe-titulo"></section>
+
+      <!-- Gráfico de barras -->
+      <section class="panel" aria-labelledby="chart-title">
+        <h2 id="chart-title">Incidentes por categoria</h2>
+        <div class="chart" id="chart" role="img" aria-label="Gráfico de barras de incidentes por categoria"></div>
+      </section>
+
+      <!-- Exportação -->
+      <section class="panel export no-print" aria-labelledby="export-title">
+        <div>
+          <h2 id="export-title">Exportar relatório</h2>
+          <p class="muted">Gerado no navegador, sem envio a servidor</p>
+        </div>
+        <div class="export-actions">
+          <button type="button" id="btn-pdf" class="btn">PDF</button>
+          <button type="button" id="btn-csv" class="btn">CSV</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/compliance.js"></script>
+</body>
+</html>

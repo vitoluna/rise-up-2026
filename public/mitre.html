@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MITRE ATT&amp;CK — SecView</title>
+  <link rel="stylesheet" href="css/cores.css" />
+  <link rel="stylesheet" href="css/compliance.css" />
+  <link rel="stylesheet" href="css/mitre.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar (menu único gerado por js/nav.js) -->
+    <aside class="sidebar">
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="mitre" data-base=""></nav>
+    </aside>
+
+    <main class="content mitre">
+      <header class="page-header mitre-topo">
+        <div>
+          <h1>MITRE ATT&amp;CK</h1>
+          <p class="muted">Eventos centralizados de todas as fontes, mapeados para táticas e técnicas do framework (Enterprise)</p>
+        </div>
+        <div class="filtros">
+          <label class="filtro">
+            <span>Período</span>
+            <select id="periodo">
+              <option value="7">Últimos 7 dias</option>
+              <option value="15">Últimos 15 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+            </select>
+          </label>
+          <label class="filtro filtro-check">
+            <input type="checkbox" id="so-detectadas" />
+            <span>Só técnicas detectadas</span>
+          </label>
+        </div>
+      </header>
+
+      <!-- Resumo -->
+      <section class="cards cards-4" id="resumo" aria-label="Resumo da cobertura"></section>
+
+      <!-- Matriz -->
+      <section class="panel" aria-labelledby="matriz-titulo">
+        <div class="panel-topo">
+          <div>
+            <h2 id="matriz-titulo">Matriz de táticas e técnicas</h2>
+            <p class="muted">Clique em uma técnica para ver os eventos. A cor indica a maior severidade registrada.</p>
+          </div>
+          <ul class="legenda" aria-label="Legenda de severidade">
+            <li><i class="sw sev-critico"></i>Crítico</li>
+            <li><i class="sw sev-alto"></i>Alto</li>
+            <li><i class="sw sev-medio"></i>Médio</li>
+            <li><i class="sw sev-info"></i>Info</li>
+            <li><i class="sw sem"></i>Sem detecção</li>
+          </ul>
+        </div>
+        <div class="matriz-rolagem" tabindex="0" aria-label="Matriz MITRE ATT&CK, role para os lados para ver todas as táticas">
+          <div class="matriz" id="matriz"></div>
+        </div>
+        <p class="muted nota">Catálogo reduzido: mostra as técnicas mais comuns de cada tática, não o ATT&amp;CK completo. Técnicas que valem para várias táticas (ex.: T1078) aparecem em cada uma.</p>
+      </section>
+
+      <!-- Detalhe da técnica -->
+      <section class="panel" id="detalhe" aria-live="polite" aria-labelledby="detalhe-titulo"></section>
+    </main>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/mitre.js"></script>
+</body>
+</html>
