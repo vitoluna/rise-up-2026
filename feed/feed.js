@@ -18,7 +18,9 @@ let contador = 0;
 function gerarEvento() {
   const modelo = MODELOS[Math.floor(Math.random() * MODELOS.length)];
   contador += 1;
-  return { id: contador, data: new Date(), ...modelo };
+  const ev = { id: contador, data: new Date(), ...modelo };
+  ev.severidade = severidadePorRegras(ev); // aplica as regras customizadas
+  return ev;
 }
 
 /* ---------- Estado ---------- */
