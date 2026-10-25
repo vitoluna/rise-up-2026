@@ -15,7 +15,7 @@
   const ITENS = [
     { id: "dashboard", texto: "Dashboard",       icone: "▣", href: "index.html" },
     { id: "feed",      texto: "Feed de alertas", icone: "◉", href: "feed/index.html" },
-    { id: "fim",       texto: "FIM",             icone: "▤", href: null },
+    { id: "fim",       texto: "FIM",             icone: "▤", href: "fim.html" },
     { id: "regras",    texto: "Regras custom",   icone: "≡", href: "regras/regras.html" },
     { id: "compliance",texto: "Compliance",      icone: "▥", href: "compliance.html" },
     { id: "mitre",     texto: "MITRE ATT&CK",    icone: "◈", href: "mitre.html" },
