@@ -95,5 +95,49 @@ window.SecViewDados = (() => {
     { dia: 23, categoria: "Sistema", origem: "host-db-01",  descricao: "PowerShell executado",                severidade: "medio" },
   ];
 
-  return { SEVERIDADES, FRAMEWORKS, PCI, HOSTS, EVENTOS };
+    // FIM — arquivos monitorados. "base" = conteúdo aprovado (baseline); "atual" = conteúdo lido agora.
+  // Sem "atual" o arquivo está íntegro. Os três arquivos alterados espelham eventos do Feed:
+  //   /etc/passwd (host-db-01) · arquivo crítico (host-db-02) · log removido (host-app-01)
+  const linhas = (...l) => l.join("\n");
+  const PASSWD = linhas(
+    "root:x:0:0:root:/root:/bin/bash",
+    "daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin",
+    "nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin",
+    "sync:x:4:65534:sync:/bin:/bin/sync"
+  );
+  const HOSTS_FILE = linhas("127.0.0.1 localhost", "10.0.0.10 host-db-01");
+  const AUTH_LOG = linhas(
+    "Oct 25 13:58:02 sshd[812]: Accepted publickey for deploy",
+    "Oct 25 14:00:31 sshd[844]: Failed password for root",
+    "Oct 25 14:02:11 sshd[851]: Failed password for root"
+  );
+  const FIM = [
+    { host: "host-db-01", caminho: "/etc/hosts", base: HOSTS_FILE },
+    {
+      host: "host-db-01", caminho: "/etc/passwd", base: PASSWD, severidade: "critico", quando: "há 2 min",
+      atual: linhas(
+        "root:x:0:0:root:/root:/bin/bash",
+        "daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin",
+        "backdoor:x:0::/root:/bin/bash",
+        "sync:x:4:65534:sync:/bin:/bin/sync"
+      ),
+    },
+    { host: "host-db-01", caminho: "/etc/ssh/sshd_config", base: linhas("PermitRootLogin no", "PasswordAuthentication no") },
+    { host: "host-db-01", caminho: "/var/log/auth.log", base: AUTH_LOG },
+    { host: "host-db-02", caminho: "/etc/passwd", base: PASSWD },
+    {
+      host: "host-db-02", caminho: "/etc/app/config.yml", severidade: "medio", quando: "há 1 h",
+      base: linhas("debug: false", "allowed_hosts: [10.0.0.0/24]"),
+      atual: linhas("debug: true", "allowed_hosts: [0.0.0.0/0]"),
+    },
+    {
+      host: "host-app-01", caminho: "/var/log/auth.log", base: AUTH_LOG, severidade: "medio", quando: "há 3 h",
+      atual: linhas("Oct 25 13:58:02 sshd[812]: Accepted publickey for deploy"),
+    },
+    { host: "host-app-01", caminho: "/etc/hosts", base: HOSTS_FILE },
+    { host: "host-web-03", caminho: "/etc/passwd", base: PASSWD },
+    { host: "host-web-03", caminho: "/etc/nginx/nginx.conf", base: linhas("worker_processes auto;", "server_tokens off;") },
+  ];
+
+  return { SEVERIDADES, FRAMEWORKS, PCI, HOSTS, EVENTOS, FIM };
 })();

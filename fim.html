@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIM — SecView</title>
+  <link rel="stylesheet" href="css/cores.css" />
+  <link rel="stylesheet" href="css/compliance.css" />
+  <link rel="stylesheet" href="css/fim.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar (menu único gerado por js/nav.js) -->
+    <aside class="sidebar">
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="fim" data-base=""></nav>
+    </aside>
+
+    <main class="content fim">
+      <header class="page-header fim-topo">
+        <div>
+          <h1>FIM — monitoramento de integridade</h1>
+          <p class="muted">Cada arquivo é comparado com o baseline aprovado: se o hash muda, vira alerta</p>
+        </div>
+        <div class="filtros">
+          <label class="filtro">
+            <span>Host</span>
+            <select id="host"></select>
+          </label>
+          <button type="button" class="btn" id="simular">Simular alteração</button>
+        </div>
+      </header>
+
+      <section class="cards cards-4" id="resumo" aria-label="Resumo do monitoramento"></section>
+
+      <section class="fim-grade">
+        <div class="panel">
+          <h2>Árvore de arquivos</h2>
+          <div class="arvore" id="arvore"></div>
+        </div>
+        <div class="panel" id="detalhe" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/fim.js"></script>
+</body>
+</html>
