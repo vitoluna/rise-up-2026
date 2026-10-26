@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SecView Dashboard
 
-## Getting Started
+Simulação interativa de um **SOC (Security Operations Center)**, o centro de operações onde empresas ou órgãos públicos monitoram ameaças cibernéticas em tempo real. O projeto recria a experiência visual e funcional dessa categoria de ferramenta, rodando no navegador com dados fictícios em sua programação.
 
-First, run the development server:
+> **Projeto de residência** da UNICAP no Porto Digital
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+> ⚠️ O SecView é uma simulação com foco em engenharia de frontend. Os eventos são sintéticos e o projeto **não detecta ameaças reais**.
+
+---
+
+## O que o projeto faz
+
+O dashboard é composto por cinco módulos, cada um inspirado em uma categoria real de mercado:
+
+| Módulo | O que mostra | Inspiração |
+|---|---|---|
+| **Feed de alertas** | Eventos de segurança chegando em tempo real, com severidade colorida | SIEM (Splunk, QRadar, Microsoft Sentinel) |
+| **FIM** | Árvore de arquivos com status de integridade e diff linha a linha | File Integrity Monitoring (Tripwire, OSSEC) |
+| **MITRE ATT&CK** | Matriz de táticas e técnicas que acende conforme a gravidade dos alertas | Framework público da MITRE Corporation |
+| **Regras customizadas** | Editor visual de regras de correlação aplicadas ao fluxo de eventos | Regras de correlação de SIEM |
+| **Compliance** | Métricas de aderência (PCI-DSS, GDPR, HIPAA) e exportação de relatório em PDF/CSV | Ferramentas de GRC |
+
+Exemplo de regra: *"mais de 5 falhas de login em 10 segundos → alerta crítico"*.
+
+## Arquitetura
+
+Um **Web Worker** gera eventos de segurança sintéticos em segundo plano. Esses eventos alimentam um estado central (*event bus*), que distribui os dados para os módulos de monitoramento.
+
+```
+Login → Dashboard (sidebar) → Feed de alertas | FIM | MITRE ATT&CK | Regras | Compliance
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Desafios técnicos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Processamento de streams de dados em tempo real
+- Performance em listas que crescem continuamente
+- Motor de regras com janela deslizante sobre o fluxo de eventos
+- Manipulação de árvore de dados com painel de diff
+- Geração de relatórios PDF/CSV direto no navegador, sem envio a servidor
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tecnologias
 
-## Learn More
+- [Next.js](https://nextjs.org) e TypeScript
+- Tailwind CSS e shadcn/ui
+- Web Workers
+- ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Como rodar
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git clone https://github.com/vitoluna/rise-up-2026.git
+cd rise-up-2026
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
-## Deploy on Vercel
+## Estrutura do repositório
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/          páginas e rotas (Next.js)
+components/   componentes de interface
+css/          estilos
+js/           scripts
+feed/         módulo de feed de alertas
+regras/       módulo de regras customizadas
+lib/          utilitários
+public/       arquivos estáticos
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Equipe
+
+<!-- Adicione nome e link do GitHub/LinkedIn de cada integrante -->
+- Emily Maria da Silva
+- Jonas José de Souza Junior
+- Kalleu Damasceno de Moura
+- Kauã Lucas Domingos da Silva
+- Marcelo José França Rocha Filho
+- Maria Letícia Araújo Queiroz Lacerda
+- Pedro Lucas Pereira Carneiro
+- Sidney Barroso de Santana Freitas
+- Tatiana Maria dos Santos Freitas
+- Vítor Gabriel da Costa Luna
+
+## Contexto
+
+Projeto desenvolvido na residência da **Universidade Católica de Pernambuco (UNICAP)** em parceria com o **Porto Digital**, no Recife.
