@@ -56,6 +56,13 @@ npm run dev
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
+## Aplicação publicada
+
+O SecView está hospedado no Render e pode ser acessado publicamente, sem instalar nada:
+
+🔗 [https://secview.onrender.com](https://secview.onrender.com)
+
+
 ## Estrutura do repositório
 
 ```
