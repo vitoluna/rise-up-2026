@@ -47,7 +47,8 @@
 .sidebar .user small { display: block; font-size: 10px; color: #9aa8b6; letter-spacing: .04em; }
 .sidebar .av {
   width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%;
-  background: linear-gradient(135deg, var(--violet, #7c6cf0), var(--sky, #4fc3c3));
+  /* fixo: o menu é escuro nos dois temas, e o texto branco precisa de contraste */
+  background: linear-gradient(135deg, #0b6e6e, #0b4f4f);
   color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700;
 }
 

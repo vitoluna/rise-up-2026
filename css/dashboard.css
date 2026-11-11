@@ -11,7 +11,36 @@
     --bg: var(--fundo);
     --line: var(--linha);
     --mut: var(--suave);
-    --ink: var(--texto)
+    --ink: var(--texto);
+
+    /* Gráficos (js/script.js usa só estas variáveis) */
+    --cat-1: #12202e;
+    --cat-2: #1d3346;
+    --cat-3: #0b4f4f;
+    --cat-4: #0b6e6e;
+    --cat-5: #2f8c8c;
+    --cat-6: #4fc3c3;
+    --cat-7: #5d6b7a;
+    --cat-8: #9aa8b6;
+    --aberto-1: #9aa8b6;
+    --aberto-2: #5d6b7a;
+    --resolvido-1: #4fc3c3;
+    --resolvido-2: #0b6e6e;
+}
+
+/* Tema escuro: os tons mais fortes das barras viram os mais claros,
+   senão somem no cartão escuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --cat-1: #e6ebf0;
+        --cat-2: #c4d0db;
+        --cat-3: #7fd6d6;
+        --cat-4: #4fc3c3;
+        --cat-5: #2fa3a3;
+        --cat-6: #1f8a8a;
+        --cat-7: #8592a0;
+        --cat-8: #7b848f;
+    }
 }
 
 * {
@@ -130,7 +159,7 @@ h1 {
 }
 
 .kpi small {
-    font-size: 9px;
+    font-size: 11px;
     color: var(--mut);
     letter-spacing: .04em;
     text-transform: uppercase
@@ -150,27 +179,27 @@ h1 {
 }
 
 .kpi p {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--mut)
 }
 
 .ring {
     --p: 53;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: conic-gradient(var(--violet) calc(var(--p)*1%), var(--linha) 0);
     display: grid;
     place-items: center;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--deep)
 }
 
 .ring span {
     background: var(--cartao);
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: grid;
     place-items: center
@@ -195,17 +224,28 @@ h1 {
 
 .hd {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 8px
+    gap: 0 16px
+}
+
+/* legenda desce para baixo do título quando não cabe ao lado */
+.hd .lg {
+    margin: 2px 0 12px auto
 }
 
 .lg {
     display: flex;
-    gap: 12px;
-    font-size: 9px;
-    color: var(--mut);
-    white-space: nowrap;
-    height: 14px
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-content: flex-start;
+    gap: 4px 12px;
+    font-size: 11px;
+    color: var(--mut)
+}
+
+.lg span {
+    white-space: nowrap
 }
 
 .lg i {
@@ -217,11 +257,11 @@ h1 {
 }
 
 .lg i.g-open {
-    background: linear-gradient(180deg, #9aa8b6, #5d6b7a)
+    background: linear-gradient(180deg, var(--aberto-1), var(--aberto-2))
 }
 
 .lg i.g-res {
-    background: linear-gradient(180deg, #4fc3c3, #0b6e6e)
+    background: linear-gradient(180deg, var(--resolvido-1), var(--resolvido-2))
 }
 
 svg {
@@ -231,14 +271,18 @@ svg {
 }
 
 svg text {
-    font-size: 9px;
+    font-size: 11px;
     fill: var(--suave)
 }
 
 svg text.val {
-    font-size: 8px;
+    font-size: 11px;
     font-weight: 700;
     fill: var(--texto)
+}
+
+svg line.grade {
+    stroke: var(--linha)
 }
 
 .hb {
@@ -246,7 +290,7 @@ svg text.val {
     grid-template-columns: 130px 1fr 34px;
     gap: 10px;
     align-items: center;
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 9px
 }
 
@@ -277,7 +321,7 @@ svg text.val {
     border-top: 1px solid var(--line);
     margin-top: 10px;
     padding-top: 10px;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--mut)
 }
 
@@ -305,7 +349,7 @@ svg text.val {
     display: grid;
     place-content: center;
     text-align: center;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--mut)
 }
 
@@ -316,7 +360,8 @@ svg text.val {
 
 .donut ul {
     list-style: none;
-    font-size: 10px;
+    padding: 0;
+    font-size: 11px;
     display: grid;
     gap: 8px
 }
@@ -335,7 +380,7 @@ svg text.val {
 }
 
 .hosts h3 {
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 8px;
     color: var(--deep)
 }
@@ -345,7 +390,7 @@ svg text.val {
     align-items: center;
     gap: 10px;
     padding: 5px 0;
-    font-size: 10px
+    font-size: 11px
 }
 
 .hosts .t {
@@ -357,7 +402,7 @@ svg text.val {
     display: grid;
     place-items: center;
     font-weight: 700;
-    font-size: 9px;
+    font-size: 11px;
     font-style: normal
 }
 
@@ -368,7 +413,7 @@ svg text.val {
 .hosts span small {
     display: block;
     color: var(--mut);
-    font-size: 8px
+    font-size: 11px
 }
 
 .hosts em {
@@ -420,12 +465,12 @@ svg text.val {
 .cf small {
     display: block;
     margin-top: 4px;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--mut)
 }
 
 .tag {
-    font-size: 8px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: .03em;
     text-transform: uppercase;
@@ -458,7 +503,7 @@ svg text.val {
 .heat div {
     border-radius: 6px;
     padding: 10px;
-    font-size: 10px
+    font-size: 11px
 }
 
 .heat b {
@@ -473,7 +518,7 @@ svg text.val {
 }
 
 .c2 {
-    background: linear-gradient(135deg, #1f8a8a, #0b6e6e);
+    background: linear-gradient(135deg, #187d7d, #0b6e6e);
     color: #fff
 }
 
@@ -504,9 +549,17 @@ svg text.val {
     .hb {
         grid-template-columns: 100px 1fr 30px
     }
+}
 
-    .lg {
-        flex-wrap: wrap;
-        height: auto
+/* Tema escuro — componentes (fica no fim para vencer as regras base acima) */
+@media (prefers-color-scheme: dark) {
+    /* degradês que terminavam no tom do cartão escuro */
+    .hosts .t,
+    .c3 {
+        background: linear-gradient(135deg, #0b6e6e, #0b4f4f)
+    }
+
+    .c1 {
+        color: var(--destaque-claro)
     }
 }
