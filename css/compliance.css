@@ -24,33 +24,6 @@ body {
 
 .shell { display: flex; min-height: 100vh; }
 
-/* ---------- Sidebar ---------- */
-.sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  background: var(--tinta);
-  padding: 24px 14px;
-  border-right: 1px solid rgba(255, 255, 255, .08);
-}
-.brand { font-size: 18px; margin: 0 0 20px 12px; color: var(--texto-claro); }
-.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
-.sidebar a {
-  padding: 9px 12px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  color: var(--texto-claro-suave);
-  text-decoration: none;
-  font-size: 13px;
-}
-.sidebar a:hover { color: var(--texto-claro); background: rgba(255, 255, 255, .08); }
-.sidebar a.active {
-  background: rgba(255, 255, 255, .14);
-  color: var(--texto-claro);
-  box-shadow: inset 3px 0 0 var(--destaque-claro);
-  font-weight: 700;
-}
-
 /* ---------- Conteúdo ---------- */
 .content {
   flex: 1;
@@ -162,16 +135,12 @@ body {
 /* ---------- Responsivo ---------- */
 @media (max-width: 800px) {
   .shell { flex-direction: column; }
-  .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); padding: 12px; }
-  .brand { margin-bottom: 8px; }
-  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
   .content { padding: 20px 16px; }
   .export { flex-direction: column; align-items: flex-start; }
 }
 
 /* ---------- Impressão (Exportar PDF) ---------- */
 @media print {
-  .sidebar, .no-print { display: none !important; }
   .print-only { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
   .content { padding: 0; max-width: none; }
   .panel, .card { break-inside: avoid; }

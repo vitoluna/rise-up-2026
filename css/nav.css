@@ -3,3 +3,64 @@
 [data-secview-nav] a.nav-off:hover { background: transparent; }
 [data-secview-nav] .nav-breve { margin-left: auto; font-size: 10px; font-weight: 400; }
 [data-secview-nav] a.nav-sair { margin-top: 14px; }
+
+/* ==========================================================
+   Menu lateral padrão — usado em todas as telas com sidebar
+   Markup:  <aside class="sidebar">
+              <h2 class="brand">SEC VIEW</h2>
+              <nav data-secview-nav="..." data-base="..." data-icones></nav>
+              (opcional) <div class="user">...</div>
+            </aside>
+   ========================================================== */
+.sidebar {
+  width: 220px; flex-shrink: 0; height: 100vh; position: sticky; top: 0;
+  display: flex; flex-direction: column; gap: 24px;
+  padding: 24px 14px; box-sizing: border-box;
+  background: var(--tinta); color: var(--texto-claro);
+  border-right: 1px solid rgba(255, 255, 255, .08);
+}
+.sidebar .brand {
+  margin: 0 0 4px 12px; font-size: 14px; font-weight: 800;
+  letter-spacing: .08em; color: var(--texto-claro);
+}
+.sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 6px;
+  font-size: 13px; color: var(--texto-claro-suave); text-decoration: none;
+}
+.sidebar nav a:hover { color: var(--texto-claro); background: rgba(255, 255, 255, .08); }
+.sidebar nav a.active,
+.sidebar nav a[aria-current="page"] {
+  color: var(--texto-claro); font-weight: 600;
+  background: rgba(255, 255, 255, .14);
+  box-shadow: inset 3px 0 0 var(--destaque-claro);
+}
+.sidebar nav .ic { width: 14px; text-align: center; color: #9aa8b6; }
+.sidebar nav a.active .ic { color: var(--destaque-claro); }
+.sidebar .user {
+  display: flex; gap: 10px; align-items: center; margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, .15); padding-top: 14px;
+  color: #fff;
+}
+.sidebar .user b { display: block; font-size: 12px; }
+.sidebar .user small { display: block; font-size: 10px; color: #9aa8b6; letter-spacing: .04em; }
+.sidebar .av {
+  width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet, #7c6cf0), var(--sky, #4fc3c3));
+  color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    width: 100%; height: auto; position: static;
+    flex-direction: column; gap: 8px; padding: 12px 14px;
+    border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, .08);
+  }
+  .sidebar .brand { margin: 0; }
+  .sidebar .user { margin-top: 0; border-top: 0; padding-top: 0; }
+  .sidebar nav { flex-direction: row; overflow-x: auto; }
+  .sidebar nav a { white-space: nowrap; }
+  .sidebar nav a[aria-current="page"],
+  .sidebar nav a.active { box-shadow: inset 0 -3px 0 var(--destaque-claro); }
+}
