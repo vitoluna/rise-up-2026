@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurações — SecView</title>
+  <script src="js/preferencias.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/cores.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/configuracoes.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <script src="js/comum.js"></script>
+  <script>SecView.exigirSessao("login.html");</script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <h2 class="brand">SEC VIEW</h2>
+      <nav data-secview-nav="config" data-base="" data-icones></nav>
+      <div class="user"><div class="av">HS</div><div><b>Helena Souza</b><small>ANALISTA SOC</small></div></div>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <h1>Configurações</h1>
+          <p class="muted">As mudanças valem na hora e ficam salvas neste navegador.</p>
+        </div>
+        <p class="salvo" id="salvo" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="config-grade">
+        <nav class="config-indice" aria-label="Seções das configurações">
+          <a href="#aparencia">Aparência</a>
+          <a href="#acessibilidade">Acessibilidade</a>
+          <a href="#layout">Layout</a>
+          <a href="#conta">Conta</a>
+        </nav>
+
+        <form class="config-secoes" id="prefs" novalidate>
+          <!-- Aparência -->
+          <section class="panel" id="aparencia" aria-labelledby="t-aparencia">
+            <h2 id="t-aparencia">Aparência</h2>
+            <fieldset class="bloco">
+              <legend class="linha-titulo">Tema</legend>
+              <p class="linha-desc">“Seguir o sistema” troca sozinho quando o computador muda de claro para escuro.</p>
+              <div class="temas">
+                <label class="tema">
+                  <input type="radio" name="tema" value="claro">
+                  <span class="amostra amostra-claro" aria-hidden="true"><i></i><b></b><b></b></span>
+                  <span class="tema-nome">Claro</span>
+                </label>
+                <label class="tema">
+                  <input type="radio" name="tema" value="escuro">
+                  <span class="amostra amostra-escuro" aria-hidden="true"><i></i><b></b><b></b></span>
+                  <span class="tema-nome">Escuro</span>
+                </label>
+                <label class="tema">
+                  <input type="radio" name="tema" value="sistema">
+                  <span class="amostra amostra-sistema" aria-hidden="true"><i></i><b></b><b></b></span>
+                  <span class="tema-nome">Seguir o sistema</span>
+                </label>
+              </div>
+            </fieldset>
+          </section>
+
+          <!-- Acessibilidade -->
+          <section class="panel" id="acessibilidade" aria-labelledby="t-acess">
+            <h2 id="t-acess">Acessibilidade</h2>
+
+            <fieldset class="linha">
+              <legend class="so-leitor">Tamanho do texto</legend>
+              <div class="linha-texto" aria-hidden="true">
+                <span class="linha-titulo">Tamanho do texto</span>
+                <span class="linha-desc">Amplia toda a interface na mesma proporção.</span>
+              </div>
+              <div class="seg">
+                <label><input type="radio" name="texto" value="normal"><span class="a a-1">Normal</span></label>
+                <label><input type="radio" name="texto" value="grande"><span class="a a-2">Grande</span></label>
+                <label><input type="radio" name="texto" value="maior"><span class="a a-3">Maior</span></label>
+              </div>
+            </fieldset>
+
+            <label class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Alto contraste</span>
+                <span class="linha-desc">Textos secundários e bordas mais fortes, nos dois temas.</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" name="contraste">
+            </label>
+
+            <div class="linha">
+              <label class="linha-texto" for="daltonismo">
+                <span class="linha-titulo">Daltonismo</span>
+                <span class="linha-desc">Troca as cores de severidade e status por cores que o tipo escolhido distingue, e dá uma forma diferente a cada nível.</span>
+              </label>
+              <select name="daltonismo" id="daltonismo">
+                <option value="nenhum">Nenhum</option>
+                <optgroup label="Dicromatismo">
+                  <option value="protanopia">Protanopia (vermelho)</option>
+                  <option value="deuteranopia">Deuteranopia (verde)</option>
+                  <option value="tritanopia">Tritanopia (azul e amarelo)</option>
+                  <option value="dicromatismo">Dicromatismo, tipo não identificado</option>
+                </optgroup>
+                <optgroup label="Outros">
+                  <option value="tricromatismo-anomalo">Tricromatismo anômalo (forma leve)</option>
+                  <option value="acromatopsia">Acromatopsia (sem cores)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="previa" role="group" aria-label="Prévia das cores de severidade e status">
+              <span><i class="marca sev-critico" aria-hidden="true"></i><span class="tag sev-critico">Crítico</span></span>
+              <span><i class="marca sev-alto" aria-hidden="true"></i><span class="tag sev-alto">Alto</span></span>
+              <span><i class="marca sev-medio" aria-hidden="true"></i><span class="tag sev-medio">Médio</span></span>
+              <span><i class="marca sev-info" aria-hidden="true"></i><span class="tag sev-info">Info</span></span>
+              <span><i class="marca ok" aria-hidden="true"></i><span class="tag ok">Conforme</span></span>
+            </div>
+
+            <label class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Reduzir animações</span>
+                <span class="linha-desc">Desliga transições e o indicador pulsante “Ao vivo”, mesmo que o sistema não peça.</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" name="movimento">
+            </label>
+
+            <label class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Destacar links e foco</span>
+                <span class="linha-desc">Links sempre sublinhados e contorno mais grosso no item focado pelo teclado.</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" name="links">
+            </label>
+          </section>
+
+          <!-- Layout -->
+          <section class="panel" id="layout" aria-labelledby="t-layout">
+            <h2 id="t-layout">Layout</h2>
+
+            <label class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Menu compacto</span>
+                <span class="linha-desc">Menu lateral só com ícones, para sobrar mais espaço ao conteúdo. O nome aparece ao passar o mouse.</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" name="menu" value="compacto">
+            </label>
+
+            <fieldset class="linha">
+              <legend class="so-leitor">Densidade</legend>
+              <div class="linha-texto" aria-hidden="true">
+                <span class="linha-titulo">Densidade</span>
+                <span class="linha-desc">Compacta reduz o espaço entre painéis, cartões e linhas de tabela.</span>
+              </div>
+              <div class="seg">
+                <label><input type="radio" name="densidade" value="confortavel"><span>Confortável</span></label>
+                <label><input type="radio" name="densidade" value="compacta"><span>Compacta</span></label>
+              </div>
+            </fieldset>
+
+            <label class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Página inicial</span>
+                <span class="linha-desc">Tela que abre depois do login.</span>
+              </span>
+              <select name="inicio" id="inicio"></select>
+            </label>
+
+            <fieldset class="bloco">
+              <legend class="linha-titulo">Seções do Dashboard</legend>
+              <p class="linha-desc">Desmarque o que não quer ver no Dashboard.</p>
+              <div class="secoes" id="secoes"></div>
+            </fieldset>
+          </section>
+
+          <!-- Conta -->
+          <section class="panel" id="conta" aria-labelledby="t-conta">
+            <h2 id="t-conta">Conta</h2>
+
+            <div class="perfil">
+              <div class="av" aria-hidden="true">HS</div>
+              <div>
+                <b>Helena Souza</b>
+                <span class="linha-desc">Analista SOC · <span id="email">sessão atual</span></span>
+              </div>
+            </div>
+
+            <div class="linha">
+              <span class="linha-texto">
+                <span class="linha-titulo">Trocar de conta</span>
+                <span class="linha-desc">Encerra esta sessão e volta ao login para entrar com outra conta.</span>
+              </span>
+              <button type="button" class="btn" id="btn-trocar">Trocar de conta</button>
+            </div>
+
+            <div class="linha perigo">
+              <span class="linha-texto">
+                <span class="linha-titulo">Excluir conta</span>
+                <span class="linha-desc">Remove a conta e as preferências. Não dá para desfazer.</span>
+              </span>
+              <button type="button" class="btn btn-perigo" id="btn-excluir">Excluir conta</button>
+            </div>
+          </section>
+
+          <div class="config-rodape">
+            <button type="button" class="btn" id="restaurar">Restaurar padrões</button>
+            <span class="linha-desc">Volta tema, acessibilidade e layout ao padrão. Não afeta a conta.</span>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Trocar de conta -->
+  <dialog class="modal" id="dlg-trocar" aria-labelledby="dlg-trocar-t">
+    <form method="dialog" class="modal-corpo">
+      <h2 id="dlg-trocar-t">Trocar de conta?</h2>
+      <p>Você vai sair desta sessão e voltar ao login para entrar com outra conta. Suas preferências continuam salvas neste navegador.</p>
+      <div class="modal-acoes">
+        <button type="submit" class="btn" value="cancelar">Cancelar</button>
+        <button type="button" class="btn primario" id="confirmar-trocar">Sair e trocar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Excluir conta -->
+  <dialog class="modal" id="dlg-excluir" aria-labelledby="dlg-excluir-t">
+    <form method="dialog" class="modal-corpo">
+      <h2 id="dlg-excluir-t">Excluir conta?</h2>
+      <p>A conta de <b id="dlg-email">sessão atual</b> e as preferências serão removidas. Esta ação não pode ser desfeita.</p>
+      <p class="nota-demo">Demonstração: sem servidor, nada é apagado de fato — você só sai da sessão.</p>
+      <label class="campo">
+        <span>Digite <b>EXCLUIR</b> para confirmar</span>
+        <input type="text" id="confirma-texto" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="modal-acoes">
+        <button type="submit" class="btn" value="cancelar">Cancelar</button>
+        <button type="button" class="btn btn-perigo-cheio" id="confirmar-excluir" disabled>Excluir conta</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/nav.js"></script>
+  <script src="js/configuracoes.js"></script>
+</body>
+</html>

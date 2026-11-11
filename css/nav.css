@@ -1,7 +1,7 @@
 /* Itens especiais do menu lateral (js/nav.js) — vale para as 3 telas */
 [data-secview-nav] a.nav-off { opacity: .45; cursor: not-allowed; }
 [data-secview-nav] a.nav-off:hover { background: transparent; }
-[data-secview-nav] .nav-breve { margin-left: auto; font-size: 10px; font-weight: 400; }
+[data-secview-nav] .nav-breve { margin-left: auto; font-size: 10px; font-weight: 400; white-space: nowrap; }
 [data-secview-nav] a.nav-sair { margin-top: 14px; }
 
 /* ==========================================================
@@ -13,7 +13,8 @@
             </aside>
    ========================================================== */
 .sidebar {
-  width: 220px; flex-shrink: 0; height: 100vh; position: sticky; top: 0;
+  /* dividido pelo zoom do "tamanho do texto" para continuar com a altura da tela */
+  width: 220px; flex-shrink: 0; height: calc(100vh / var(--zoom, 1)); position: sticky; top: 0;
   display: flex; flex-direction: column; gap: 24px;
   padding: 24px 14px; box-sizing: border-box;
   background: var(--tinta); color: var(--texto-claro);
@@ -64,4 +65,23 @@
   .sidebar nav a { white-space: nowrap; }
   .sidebar nav a[aria-current="page"],
   .sidebar nav a.active { box-shadow: inset 0 -3px 0 var(--destaque-claro); }
+}
+
+/* ==========================================================
+   Menu compacto (Configurações → Layout): só ícones.
+   Os nomes continuam no link para leitores de tela e no title.
+   Só em telas largas; abaixo de 800px o menu já vira uma faixa.
+   ========================================================== */
+@media (min-width: 801px) {
+  :root[data-menu="compacto"] .sidebar { width: 68px; padding: 24px 10px; }
+  :root[data-menu="compacto"] .sidebar .brand { margin: 0 0 4px; font-size: 0; text-align: center; }
+  :root[data-menu="compacto"] .sidebar .brand::before { content: "SV"; font-size: 14px; }
+  :root[data-menu="compacto"] .sidebar nav a { justify-content: center; padding: 10px 0; }
+  :root[data-menu="compacto"] .sidebar nav .ic { width: auto; font-size: 15px; }
+  :root[data-menu="compacto"] .sidebar .rotulo,
+  :root[data-menu="compacto"] .sidebar .nav-breve {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  :root[data-menu="compacto"] .sidebar .user { justify-content: center; }
+  :root[data-menu="compacto"] .sidebar .user > div:not(.av) { display: none; }
 }

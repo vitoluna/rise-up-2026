@@ -1,0 +1,265 @@
+/* ==========================================================
+   SecView — base comum das telas internas
+   (Dashboard, Feed, FIM, Regras, Compliance, MITRE)
+
+   Ordem de carregamento em cada tela:
+     cores.css → base.css → css da própria tela → nav.css
+
+   Aqui ficam só os padrões que se repetem entre telas:
+   layout com menu, cabeçalho, painel, cartão de número,
+   botão, campo, etiqueta e tabela. Cada tela guarda no seu
+   próprio arquivo apenas o que é dela.
+
+   Escala de cantos: 4px (controles e itens pequenos),
+   6px (painéis e cartões), pílula (etiquetas).
+   Pontos de quebra: 1000px, 800px (menu vira faixa), 480px.
+   ========================================================== */
+
+:root {
+  --fonte: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --raio-sm: 4px;
+  --raio: 6px;
+  --controle: 34px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--fonte);
+  font-size: 14px;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+button, input, select, textarea { font: inherit; }
+
+/* hidden sempre esconde, mesmo em blocos com display: grid/flex */
+[hidden] { display: none !important; }
+
+/* ---------- Layout: menu + conteúdo ---------- */
+.shell { display: flex; min-height: 100vh; }
+
+.content {
+  flex: 1;
+  min-width: 0;
+  max-width: 1280px;
+  padding: 28px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---------- Cabeçalho da tela ---------- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.page-header h1 { font-size: 18px; font-weight: 700; color: var(--texto); }
+.muted { color: var(--suave); font-size: 11px; margin-top: 4px; }
+
+/* ---------- Filtros e campos ---------- */
+.filtros { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.filtro, .campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; color: var(--suave); }
+
+.content select,
+.content input[type="text"],
+.content input[type="number"],
+.content input[type="search"] {
+  height: var(--controle);
+  padding: 0 10px;
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cartao);
+  color: var(--texto);
+  font-size: 13px;
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--controle);
+  padding: 0 14px;
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cartao);
+  color: var(--texto);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn:hover { background: var(--faixa); }
+
+/* Ação principal e botão ligado. O texto usa a cor do cartão:
+   branco no tema claro, escuro no escuro (onde o destaque é claro). */
+.btn.primario,
+.btn[aria-pressed="true"] {
+  background: var(--destaque);
+  border-color: var(--destaque);
+  color: var(--cartao);
+}
+/* hover escurece um pouco por cima, mantendo o contraste do texto nos dois temas */
+.btn.primario:hover { box-shadow: inset 0 0 0 99px rgba(0, 0, 0, .12); }
+
+.btn:focus-visible,
+.content a:focus-visible,
+.content select:focus-visible,
+.content input:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* ---------- Painéis ---------- */
+.panel {
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 16px 18px;
+  min-width: 0;
+}
+.panel h2 { font-size: 13px; font-weight: 700; color: var(--texto); }
+
+/* ---------- Cartões de número (resumo no topo) ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.card {
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 16px 18px;
+  min-width: 0;
+}
+.cards .card .label { font-size: 12px; color: var(--suave); }
+.cards .card .value { font-size: 24px; font-weight: 700; margin: 6px 0 8px; font-variant-numeric: tabular-nums; }
+.cards .card .value small { font-size: 12px; font-weight: 400; color: var(--suave); margin-left: 4px; }
+.cards .card .sub { font-size: 12px; color: var(--suave); }
+
+/* ---------- Etiquetas (severidade, status, referências) ----------
+   Um só desenho para .tag, .badge, .chip e .sev, que as telas
+   geram com nomes diferentes. */
+.tag, .badge, .chip, .sev {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  background: var(--destaque-fundo);
+  color: var(--destaque);
+}
+.tag.ok, .chip.ok { background: var(--sucesso-fundo); color: var(--sucesso-texto); }
+.tag.warn { background: var(--alto-fundo); color: var(--alto-texto); }
+.tag.bad { background: var(--critico-fundo); color: var(--critico-texto); }
+.sev-critico:is(.tag, .badge, .chip, .sev), .b-critico { background: var(--critico-fundo); color: var(--critico-texto); }
+.sev-alto:is(.tag, .badge, .chip, .sev),    .b-alto    { background: var(--alto-fundo);    color: var(--alto-texto); }
+.sev-medio:is(.tag, .badge, .chip, .sev),   .b-medio   { background: var(--medio-fundo);   color: var(--medio-texto); }
+.sev-info:is(.tag, .badge, .chip, .sev),    .b-info    { background: var(--info-fundo);    color: var(--info-texto); }
+
+/* ---------- Tabelas ---------- */
+.tabela-wrap,
+.tabela-rolagem { overflow-x: auto; }
+.tabela-wrap {
+  position: relative; /* contém o .so-leitor, senão ele estica a página no celular */
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+}
+.tabela,
+.tabela-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabela th,
+.tabela-wrap th {
+  text-align: left;
+  background: var(--faixa);
+  color: var(--suave);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--linha);
+  white-space: nowrap;
+}
+.tabela td,
+.tabela-wrap td { padding: 10px 12px; border-bottom: 1px solid var(--linha); white-space: nowrap; }
+.tabela td.desc { white-space: normal; }
+.tabela tr:last-child td,
+.tabela-wrap tr:last-child td { border-bottom: 0; }
+
+/* ---------- Ícone de host (inicial) — Dashboard e FIM ---------- */
+.host-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--raio-sm);
+  background: linear-gradient(135deg, #0b6e6e, #12202e);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: normal;
+}
+/* tema escuro: o tom final #12202e sumiria no cartão escuro */
+:root[data-tema="escuro"] .host-ic { background: linear-gradient(135deg, #0b6e6e, #0b4f4f); }
+
+.detalhe-vazio { color: var(--suave); font-size: 12px; }
+.so-leitor {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Daltonismo: forma além da cor nos marcadores ----------
+   Com qualquer tipo escolhido (data-daltonismo), cada nível ganha uma
+   forma própria: Crítico ▲, Alto ◆, Médio ■, Info ○, Conforme ●.
+   Marcadores: .marca (Dashboard), .sev-ponto (Feed), .ponto (FIM),
+   .dot e .sw (Compliance, MITRE). */
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-critico, .p-critico, .bad),
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-alto, .p-alto, .warn) {
+  width: 10px;
+  height: 10px;
+  border-radius: 0;
+  border: 0;
+}
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-critico, .p-critico, .bad) {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-alto, .p-alto, .warn) {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+/* cores claras ganham contorno para aparecer no cartão */
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-medio, .p-medio) {
+  border-radius: 1px;
+  box-shadow: inset 0 0 0 1.5px var(--medio-texto);
+}
+:root[data-daltonismo] :is(.marca, .sev-ponto, .ponto, .dot, .sw):is(.sev-info, .p-info) {
+  border-radius: 50%;
+  background: transparent !important;
+  box-shadow: inset 0 0 0 2px var(--info-texto);
+}
+
+/* ---------- Densidade compacta (Configurações → Layout) ---------- */
+:root[data-densidade="compacta"] { --controle: 30px; }
+:root[data-densidade="compacta"] .content { gap: 12px; padding-top: 20px; padding-bottom: 28px; }
+:root[data-densidade="compacta"] .panel,
+:root[data-densidade="compacta"] .card { padding: 12px 14px; }
+:root[data-densidade="compacta"] .cards { gap: 8px; }
+:root[data-densidade="compacta"] .tabela th,
+:root[data-densidade="compacta"] .tabela td,
+:root[data-densidade="compacta"] .tabela-wrap th,
+:root[data-densidade="compacta"] .tabela-wrap td { padding-top: 6px; padding-bottom: 6px; }
+
+/* ---------- Telas menores ---------- */
+@media (max-width: 800px) {
+  .shell { flex-direction: column; }
+  .content { padding: 20px 16px 32px; }
+  .page-header { align-items: flex-start; }
+}

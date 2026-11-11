@@ -19,7 +19,7 @@
     { id: "regras",    texto: "Regras custom",   icone: "≡", href: "regras/regras.html" },
     { id: "compliance",texto: "Compliance",      icone: "▥", href: "compliance.html" },
     { id: "mitre",     texto: "MITRE ATT&CK",    icone: "◈", href: "mitre.html" },
-    { id: "config",    texto: "Configurações",   icone: "⚙", href: null },
+    { id: "config",    texto: "Configurações",   icone: "⚙", href: "configuracoes.html" },
   ];
 
   const ativo = raiz.dataset.secviewNav;
@@ -36,7 +36,12 @@
       ic.textContent = icone;
       a.appendChild(ic);
     }
-    a.appendChild(document.createTextNode(texto));
+    // o nome fica num span para o menu compacto escondê-lo só visualmente
+    const rotulo = document.createElement("span");
+    rotulo.className = "rotulo";
+    rotulo.textContent = texto;
+    a.appendChild(rotulo);
+    a.title = texto;
 
     if (!href) {
       a.className = "nav-off";
@@ -50,7 +55,7 @@
 
     a.href = base + href;
     if (id === ativo) {
-      a.className = "on active"; // "on" = dashboard.css, "active" = compliance.css
+      a.className = "active";
       a.setAttribute("aria-current", "page");
     }
     return a;

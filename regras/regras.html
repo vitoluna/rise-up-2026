@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Regras customizadas · SecView</title>
+  <script src="../js/preferencias.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="../css/cores.css">
-  <link rel="stylesheet" href="../css/nav.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="regras.css">
+  <link rel="stylesheet" href="../css/nav.css">
 </head>
 <body>
-<div class="site">
+<div class="shell">
 
   <aside class="sidebar">
     <h2 class="brand">SEC VIEW</h2>
@@ -18,18 +22,15 @@
     <div class="user"><div class="av">HS</div><div><b>Helena Souza</b><small>ANALISTA SOC</small></div></div>
   </aside>
 
-  <div class="principal">
-    <header class="hero">
-      <div class="hero-in">
+  <main class="content">
+      <header class="page-header">
         <div>
           <h1>Regras customizadas</h1>
-          <p>Defina quando um evento vira crítico, alto, médio ou info. As regras ficam salvas neste navegador.</p>
+          <p class="muted">Defina quando um evento vira crítico, alto, médio ou info. As regras ficam salvas neste navegador.</p>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <main class="conteudo">
-      <section class="card nova" aria-labelledby="t-nova">
+      <section class="panel nova" aria-labelledby="t-nova">
         <h2 id="t-nova">Nova regra</h2>
         <form id="form" class="grade" novalidate>
           <label class="campo">
@@ -56,14 +57,14 @@
               <option value="info">Info</option>
             </select>
           </label>
-          <button type="submit" class="botao">Adicionar regra</button>
+          <button type="submit" class="btn primario">Adicionar regra</button>
         </form>
         <p class="msg" id="msg" role="status"></p>
       </section>
 
       <div class="barra">
         <p class="status"><span id="contagem">0 regras</span></p>
-        <button type="button" class="botao" id="restaurar">Restaurar padrão</button>
+        <button type="button" class="btn" id="restaurar">Restaurar padrão</button>
       </div>
 
       <div class="tabela-wrap">
@@ -85,12 +86,7 @@
         Regras de <strong>login</strong> valem na tela de login (a cada N erros seguidos, um alerta é enviado ao feed).
         Regras de <strong>texto</strong> valem para os eventos que chegarem ao feed depois de salvas.
       </p>
-    </main>
-
-    <footer class="rodape">
-      <div class="rodape-in"><span>SecView · monitoramento de serviços</span></div>
-    </footer>
-  </div>
+  </main>
 
 </div>
 <script src="../js/comum.js"></script>

@@ -1,29 +1,33 @@
-.nova { margin-bottom: 24px; }
-.grade { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 14px; align-items: end; }
-.grade .campo { margin: 0; }
-input[type="text"], input[type="number"] {
-  height: 38px; padding: 0 12px; border: 1px solid var(--linha); border-radius: 8px;
-  background: var(--cartao); color: var(--texto); font: inherit; font-size: .9375rem; width: 100%;
-}
-input:focus-visible { outline: 2px solid #4a8cff; outline-offset: 2px; }
-.msg { min-height: 1.3em; margin: 12px 0 0; font-size: .875rem; }
-.msg.erro { color: #c62828; }
-.msg.ok { color: #1f7a46; }
-@media (prefers-color-scheme: dark) { .msg.erro { color: #ff7b7b; } .msg.ok { color: #5fd08f; } }
+/* ==========================================================
+   SecView — Regras customizadas
+   Base comum (layout, cabeçalho, painel, botões, campos,
+   etiquetas, tabela) vem de css/base.css.
+   ========================================================== */
 
-.barra { margin-top: 0; }
+.nova h2 { margin-bottom: 12px; }
+.grade { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; gap: 12px; align-items: end; }
+.grade input, .grade select { width: 100%; }
+.msg { min-height: 1.3em; margin-top: 10px; font-size: 13px; }
+.msg.erro { color: var(--critico-texto); }
+.msg.ok { color: var(--sucesso-texto); }
+
+.barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.status { font-size: 13px; font-weight: 600; }
+
 td input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--destaque); cursor: pointer; }
 tr.inativa td:not(:first-child):not(:last-child) { opacity: .5; }
 td.nome { font-weight: 600; white-space: normal; min-width: 160px; }
 td.cond { white-space: normal; color: var(--suave); min-width: 200px; }
-.excluir {
-  height: 32px; padding: 0 12px; border: 1px solid var(--linha); border-radius: 8px;
-  background: transparent; color: var(--texto); font: inherit; font-size: .875rem; cursor: pointer;
-}
-.excluir:hover { border-color: #c62828; color: #c62828; }
-.excluir:focus-visible { outline: 2px solid #4a8cff; outline-offset: 2px; }
-.nota { margin: 14px 2px 0; font-size: .875rem; line-height: 1.5; color: var(--suave); }
-.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+td.vazio { padding: 32px 16px; text-align: center; color: var(--suave); white-space: normal; }
+.tabela-wrap tbody td:last-child { text-align: right; }
 
-@media (max-width: 900px) { .grade { grid-template-columns: 1fr 1fr; } .grade .botao { grid-column: 1 / -1; } }
-@media (max-width: 560px) { .grade { grid-template-columns: 1fr; } }
+.excluir {
+  height: 28px; padding: 0 10px; border: 1px solid var(--linha-forte); border-radius: var(--raio-sm);
+  background: transparent; color: var(--texto); font-size: 12px; cursor: pointer;
+}
+.excluir:hover { border-color: var(--critico); color: var(--critico-texto); }
+.excluir:focus-visible { outline: 2px solid var(--foco); outline-offset: 2px; }
+.nota { margin-top: -6px; font-size: 12px; line-height: 1.5; color: var(--suave); }
+
+@media (max-width: 1000px) { .grade { grid-template-columns: 1fr 1fr; } .grade .btn { grid-column: 1 / -1; } }
+@media (max-width: 480px) { .grade { grid-template-columns: minmax(0, 1fr); } }

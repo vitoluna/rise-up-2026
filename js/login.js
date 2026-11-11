@@ -150,9 +150,13 @@
 
     travarFormulario(true);
     btnEntrar.textContent = "Entrando…";
-    mostrarAlerta(alerta, "ok", "Login realizado com sucesso.", "Redirecionando para o dashboard…");
+    // Página inicial escolhida em Configurações (lista fechada em js/preferencias.js)
+    const prefs = window.SecViewPreferencias;
+    const destino = prefs ? prefs.ler().inicio : CONFIG.destino;
+    const pagina = prefs && prefs.PAGINAS.find((p) => p.href === destino);
+    mostrarAlerta(alerta, "ok", "Login realizado com sucesso.", `Abrindo ${pagina ? pagina.nome : "o dashboard"}…`);
 
-    setTimeout(() => { window.location.href = CONFIG.destino; }, 800);
+    setTimeout(() => { window.location.href = destino; }, 800);
   }
 
   /* ---------- Envio do formulário ---------- */

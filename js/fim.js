@@ -79,28 +79,43 @@ function montarArvore(lista) {
     return raiz;
 }
 
-function temModificado(no) {
-    if (no.__arquivo) return no.__arquivo.modificado;
-    return Object.values(no).some(temModificado);
+function contarModificados(no) {
+    if (no.__arquivo) return no.__arquivo.modificado ? 1 : 0;
+    return Object.values(no).reduce((total, filho) => total + contarModificados(filho), 0);
 }
 
-function renderNo(obj) {
+// Mesma inicial usada no Dashboard ("Hosts mais atacados"); sem cadastro, usa a 1ª letra após "host-"
+function siglaHost(nome) {
+    const h = DADOS.HOSTS.find((x) => x.nome === nome);
+    return h ? h.sigla : (nome.replace(/^host-/, "")[0] || "?").toUpperCase();
+}
+
+// Severidade e status seguem o padrão das outras telas: texto na cor normal,
+// cor só no ponto e na etiqueta (escala Crítico/Alto/Médio/Info).
+function renderNo(obj, nivel = 0) {
     const ul = criar("ul");
     Object.entries(obj).forEach(([nome, filho]) => {
         const li = criar("li");
         if (filho.__arquivo) {
             const f = filho.__arquivo;
+            const sev = f.severidade || "alto";
             const btn = criar("button", "arq" + (f.modificado ? " mod" : ""));
             btn.type = "button";
             btn.dataset.id = f.id;
             btn.setAttribute("aria-pressed", String(estado.selecionado === f.id));
-            btn.append(criar("span", "ponto"), nome);
-            btn.title = f.modificado ? "Modificado" : "Íntegro";
+            btn.append(criar("span", "ponto" + (f.modificado ? " sev-" + sev : "")), criar("span", "no-nome", nome));
+            if (f.modificado) btn.append(criar("span", "chip sev-" + sev, SEV[sev]));
+            btn.title = f.modificado ? `Modificado · ${SEV[sev]}` : "Íntegro";
             li.append(btn);
         } else {
             const d = criar("details");
             d.open = true;
-            d.append(criar("summary", temModificado(filho) ? "tem-mod" : "", nome), renderNo(filho));
+            const resumo = criar("summary", nivel === 0 ? "host" : "pasta");
+            if (nivel === 0) resumo.append(criar("i", "host-ic", siglaHost(nome)));
+            resumo.append(criar("span", "no-nome", nome));
+            const mod = nivel === 0 ? contarModificados(filho) : 0;
+            if (mod) resumo.append(criar("span", "tag bad", mod > 1 ? `${mod} alterados` : "1 alterado"));
+            d.append(resumo, renderNo(filho, nivel + 1));
             li.append(d);
         }
         ul.append(li);

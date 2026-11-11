@@ -4,14 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Feed de alertas — SecView</title>
+  <script src="../js/preferencias.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="../css/cores.css">
+  <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../css/nav.css">
   <script src="../js/comum.js"></script>
   <script>SecView.exigirSessao("../login.html");</script>
 </head>
 <body>
-<div class="site">
+<div class="shell">
 
   <aside class="sidebar">
     <h2 class="brand">SEC VIEW</h2>
@@ -19,22 +24,19 @@
     <div class="user"><div class="av">HS</div><div><b>Helena Souza</b><small>ANALISTA SOC</small></div></div>
   </aside>
 
-  <div class="principal">
-    <header class="hero">
-      <div class="hero-in">
+  <main class="content">
+      <header class="page-header">
         <div>
           <h1>Alertas em tempo real</h1>
-          <p>Acompanhe o que acontece nos seus hosts e priorize o que está crítico primeiro.</p>
+          <p class="muted">Acompanhe o que acontece nos seus hosts e priorize o que está crítico primeiro.</p>
         </div>
         <div class="placar" id="placar" aria-live="polite">
           <span class="placar-n" id="placar-n">0</span>
           <span class="placar-t" id="placar-t">críticos</span>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <main class="conteudo">
-      <section class="cards" aria-label="Resumo dos alertas">
+      <section class="cards cards-3" aria-label="Resumo dos alertas">
         <article class="card">
           <h2>Total de alertas</h2>
           <p class="card-n" id="total">0</p>
@@ -61,7 +63,7 @@
             <span>Severidade</span>
             <select id="filtro"></select>
           </label>
-          <button type="button" class="botao" id="btn-pausa" aria-pressed="false">Pausar</button>
+          <button type="button" class="btn" id="btn-pausa" aria-pressed="false">Pausar</button>
         </div>
       </div>
 
@@ -79,15 +81,8 @@
           <tbody id="corpo"></tbody>
         </table>
       </div>
-    </main>
-
-    <footer class="rodape">
-      <div class="rodape-in">
-        <span>SecView · centralizador de eventos</span>
-        <span id="limite"></span>
-      </div>
-    </footer>
-  </div>
+      <p class="muted limite" id="limite"></p>
+  </main>
 
 </div>
 <script src="../regras/regrabase.js"></script>
@@ -121,7 +116,7 @@
     <footer class="rec-rodape">
       <a class="rec-link" href="../mitre.html">Ver no MITRE ATT&amp;CK</a>
       <a class="rec-link" href="../compliance.html">Ver no Compliance PCI-DSS</a>
-      <button type="button" class="botao" id="rec-ok">Fechar</button>
+      <button type="button" class="btn" id="rec-ok">Fechar</button>
     </footer>
   </div>
 </dialog>

@@ -13,7 +13,6 @@ const categorias = [
     ['Brute force', 420], ['Malware', 380], ['Phishing', 310], ['Escalação de privilégio', 260],
     ['Tráfego anômalo', 210], ['Alteração de arquivo', 180], ['Exfiltração', 140], ['Evasão de defesa', 120]
 ];
-const tons = categorias.map((_, i) => `var(--cat-${i + 1})`);
 
 // Abertos vs. resolvidos por categoria (abertos + resolvidos = total da categoria acima)
 const abertosResolvidos = [
@@ -81,11 +80,11 @@ function linhas(el, labels, series) {
     el.innerHTML = s + '</svg>';
 }
 
-// Barras horizontais (HTML/CSS)
-function barrasH(el, dados, cores, sufixo = '', max) {
+// Barras horizontais (HTML/CSS; cor única definida em .hb b)
+function barrasH(el, dados, sufixo = '', max) {
     max = max || Math.max(...dados.map(d => d[1]));
-    el.innerHTML = dados.map(([n, v], i) =>
-        `<div class="hb"><span>${n}</span><i><b style="width:${v / max * 100}%;background:${cores[i]}"></b></i><em>${v}${sufixo}</em></div>`
+    el.innerHTML = dados.map(([n, v]) =>
+        `<div class="hb"><span>${n}</span><i><b style="width:${v / max * 100}%"></b></i><em>${v}${sufixo}</em></div>`
     ).join('');
 }
 
@@ -162,7 +161,7 @@ function rosca(el, partes) {
 
 function legendaSeveridade(el, partes) {
     el.innerHTML = partes.map(({ chave, nome, pct }) =>
-        `<li><i style="background:var(--${chave})"></i>${nome} (${pct}%)</li>`).join('');
+        `<li><i class="marca sev-${chave}" style="background:var(--${chave})"></i>${nome} (${pct}%)</li>`).join('');
 }
 
 // Conformidade por framework: barra + % + controles atendidos + status
@@ -200,7 +199,7 @@ new ResizeObserver(() => {
     quadro = requestAnimationFrame(desenharSvgs);
 }).observe(document.querySelector('main'));
 
-barrasH(document.getElementById('hbars'), categorias, tons);
+barrasH(document.getElementById('hbars'), categorias);
 const totAb = abertosResolvidos.reduce((a, d) => a + d[1], 0), totRe = abertosResolvidos.reduce((a, d) => a + d[2], 0);
 document.getElementById('vsum').innerHTML =
     `<span><b>${fmt(totAb)}</b> abertos</span><span><b>${fmt(totRe)}</b> resolvidos</span><span><b>${(totRe / (totAb + totRe) * 100).toFixed(1).replace('.', ',')}%</b> de resolução no top 8</span>`;
@@ -208,5 +207,5 @@ rosca(document.getElementById('donut'), severidade);
 legendaSeveridade(document.getElementById('sev-legenda'), severidade);
 conformidadeLista(document.getElementById('comp'), conformidade);
 document.getElementById('hosts').insertAdjacentHTML('beforeend', topHosts.map(h =>
-    `<div><i class="t">${h.sigla}</i><span>${h.nome}<small>${h.funcao}</small></span><em>${fmt(h.alertas)} alertas</em></div>`
+    `<div><i class="host-ic">${h.sigla}</i><span>${h.nome}<small>${h.funcao}</small></span><em>${fmt(h.alertas)} alertas</em></div>`
 ).join(''));

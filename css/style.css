@@ -3,22 +3,22 @@
    Paleta extraída das telas MOBILE LOGIN do Figma
    ========================================================== */
 
+/* Segue o tema (claro/escuro) como as telas internas: o cartão usa
+   --cartao e os textos --texto; só o fundo da página fica sempre escuro. */
 :root {
-  --navy: var(--tinta);
-  --navy-escuro: var(--tinta);
-  --navy-hover: var(--tinta-clara);
-  --periwinkle: var(--destaque-fundo);
+  --fundo-pagina: var(--tinta);
   --label: var(--destaque);
   --borda: var(--linha);
   --placeholder: var(--suave);
-  --erro: var(--critico);
+  --erro: var(--critico-texto);
   --erro-fundo: var(--critico-fundo);
   --ok: var(--sucesso);
   --ok-fundo: var(--sucesso-fundo);
-  --branco: #ffffff;
 
-  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fonte: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
+
+:root[data-tema="escuro"] { --fundo-pagina: var(--fundo); }
 
 *,
 *::before,
@@ -33,7 +33,7 @@ body {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: var(--navy-escuro);
+  background: var(--fundo-pagina);
   color: var(--texto);
   font-family: var(--fonte);
   font-size: 14px;
@@ -45,8 +45,9 @@ body {
 
 .cartao {
   width: min(100%, 420px);
-  background: var(--branco);
-  border-radius: 24px;
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
   padding: 32px 40px 44px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
@@ -57,7 +58,7 @@ body {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: 0.01em;
-  color: var(--navy);
+  color: var(--texto);
 }
 
 .slogan {
@@ -72,7 +73,7 @@ body {
   text-align: center;
   font-size: 22px;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--texto);
 }
 
 .avatar {
@@ -105,8 +106,8 @@ body {
   height: 44px;
   padding: 0 44px 0 12px;
   border: 1px solid var(--borda);
-  border-radius: 6px;
-  background: var(--branco);
+  border-radius: 4px;
+  background: var(--cartao);
   color: var(--texto);
   font: inherit;
   font-size: 14px;
@@ -119,7 +120,7 @@ body {
 
 .entrada input:focus {
   outline: none;
-  border-color: var(--navy);
+  border-color: var(--destaque);
   box-shadow: 0 0 0 3px rgba(11, 110, 110, 0.22);
 }
 
@@ -158,9 +159,9 @@ body {
   place-items: center;
   padding: 0;
   border: 0;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 4px 4px 0;
   background: transparent;
-  color: var(--navy);
+  color: var(--texto);
   cursor: pointer;
 }
 
@@ -197,9 +198,9 @@ body {
   height: 44px;
   padding: 0 32px;
   border: 0;
-  border-radius: 8px;
-  background: var(--navy);
-  color: var(--branco);
+  border-radius: 4px;
+  background: var(--texto);
+  color: var(--cartao);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -207,7 +208,7 @@ body {
   transition: background 0.15s, transform 0.1s, opacity 0.15s;
 }
 
-.botao:hover:not(:disabled) { background: var(--navy-hover); }
+.botao:hover:not(:disabled) { opacity: 0.88; }
 .botao:active:not(:disabled) { transform: translateY(1px); }
 
 .botao:focus-visible {
@@ -228,7 +229,7 @@ body {
   align-items: flex-start;
   margin-top: 22px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--erro-fundo);
   color: var(--erro);
   font-size: 13px;
@@ -251,7 +252,7 @@ body {
 
 /* Última tentativa antes do bloqueio: mais destaque */
 .alerta--critico {
-  border-left: 4px solid var(--erro);
+  border: 1px solid var(--critico);
   background: var(--critico-fundo-forte);
 }
 
@@ -349,7 +350,7 @@ body {
 .sucesso h3 {
   margin: 4px 0 0;
   font-size: 18px;
-  color: var(--navy);
+  color: var(--texto);
 }
 
 .sucesso p {
@@ -363,13 +364,14 @@ body {
   body {
     display: block;
     padding: 0;
-    background: var(--branco);
+    background: var(--cartao);
   }
 
   .cartao {
     width: 100%;
     min-height: 100dvh;
     padding: 28px 28px 40px;
+    border: 0;
     border-radius: 0;
     box-shadow: none;
   }
@@ -427,8 +429,8 @@ body {
   height: 44px;
   padding: 0 12px;
   border: 1px solid var(--borda);
-  border-radius: 8px;
-  background: var(--branco);
+  border-radius: 4px;
+  background: var(--cartao);
   color: var(--texto);
   font: inherit;
   font-size: 14px;
@@ -440,7 +442,7 @@ body {
 .btn-social svg { width: 20px; height: 20px; flex: none; }
 
 .btn-social:hover:not(:disabled) {
-  border-color: var(--navy);
+  border-color: var(--linha-forte);
   background: var(--faixa);
 }
 
