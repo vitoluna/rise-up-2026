@@ -21,9 +21,13 @@
   border-right: 1px solid rgba(255, 255, 255, .08);
 }
 .sidebar .brand {
+  display: flex; align-items: center; gap: 9px;
   margin: 0 0 4px 12px; font-size: 14px; font-weight: 800;
   letter-spacing: .08em; color: var(--texto-claro);
 }
+/* símbolo da marca (js/nav.js): branco sobre o menu, com o olho "vazado" na cor do menu */
+.sidebar .brand-logo { flex: none; width: 21px; height: 28px; fill: currentColor; }
+.sidebar .brand-logo .furo { fill: var(--tinta); }
 .sidebar nav { display: flex; flex-direction: column; gap: 2px; }
 .sidebar nav a {
   display: flex; align-items: center; gap: 10px;
@@ -74,8 +78,8 @@
    ========================================================== */
 @media (min-width: 801px) {
   :root[data-menu="compacto"] .sidebar { width: 68px; padding: 24px 10px; }
-  :root[data-menu="compacto"] .sidebar .brand { margin: 0 0 4px; font-size: 0; text-align: center; }
-  :root[data-menu="compacto"] .sidebar .brand::before { content: "SV"; font-size: 14px; }
+  /* só o símbolo: o nome some (font-size: 0) e a logo fica no centro */
+  :root[data-menu="compacto"] .sidebar .brand { margin: 0 0 4px; font-size: 0; gap: 0; justify-content: center; }
   :root[data-menu="compacto"] .sidebar nav a { justify-content: center; padding: 10px 0; }
   :root[data-menu="compacto"] .sidebar nav .ic { width: auto; font-size: 15px; }
   :root[data-menu="compacto"] .sidebar .rotulo,

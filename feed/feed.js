@@ -15,8 +15,8 @@ const MODELOS = window.SecViewDados.EVENTOS.map((e) => ({
 }));
 
 let contador = 0;
-function gerarEvento() {
-  const modelo = MODELOS[Math.floor(Math.random() * MODELOS.length)];
+function gerarEvento(modelos = MODELOS) {
+  const modelo = modelos[Math.floor(Math.random() * modelos.length)];
   contador += 1;
   const ev = { id: contador, data: new Date(), ...modelo };
   ev.severidade = severidadePorRegras(ev); // aplica as regras customizadas
@@ -27,6 +27,7 @@ function gerarEvento() {
 let eventos = [];      // o mais novo fica na posição 0
 let pausado = false;
 let filtro = "todos";
+let busca = "";        // texto do campo "Buscar no feed" (evento ou host), já normalizado
 let timer = null;
 let pausadoPeloPainel = false; // o feed para enquanto a recomendação está aberta
 const feitas = new Map();       // id do alerta → ações já marcadas (só em memória)
@@ -37,12 +38,16 @@ const el = {
   placar: $("placar"), placarN: $("placar-n"), placarT: $("placar-t"),
   total: $("total"), sevLista: $("sev-lista"), ultimo: $("ultimo"),
   ponto: $("ponto"), statusTxt: $("status-txt"), atual: $("atual"),
-  filtro: $("filtro"), btnPausa: $("btn-pausa"), corpo: $("corpo"), limite: $("limite"),
+  filtro: $("filtro"), busca: $("busca-feed"), btnPausa: $("btn-pausa"), corpo: $("corpo"), limite: $("limite"),
   rec: $("rec"), recTitulo: $("rec-titulo"), recMeta: $("rec-meta"), recPrior: $("rec-prior"),
   recOque: $("rec-oque"), recAcoes: $("rec-acoes"), recProg: $("rec-prog"), recRefs: $("rec-refs"),
 };
 
 /* ---------- Utilitários ---------- */
+// minúsculas e sem acento, para a busca não depender de "é" ou "E"
+const norm = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+const combina = (e) => !busca || norm(`${e.evento} ${e.origem}`).includes(busca);
+
 function formatarHora(data) {
   return data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
@@ -95,12 +100,14 @@ function renderizar() {
     el.ultimo.replaceChildren(criar("p", "card-sub", "Aguardando o primeiro alerta."));
   }
 
-  // tabela (aplica o filtro)
-  const visiveis = filtro === "todos" ? eventos : eventos.filter((e) => e.severidade === filtro);
+  // tabela (aplica a severidade e a busca por texto)
+  const visiveis = eventos.filter((e) => (filtro === "todos" || e.severidade === filtro) && combina(e));
 
   if (visiveis.length === 0) {
     const tr = criar("tr");
-    const td = criar("td", "vazio", "Nenhum alerta com essa severidade. Escolha outro filtro para ver mais eventos.");
+    const td = criar("td", "vazio", busca
+      ? `Nenhum alerta com “${el.busca.value.trim()}” no feed agora. Limpe a busca ou aguarde: novos alertas entram a cada instante.`
+      : "Nenhum alerta com essa severidade. Escolha outro filtro para ver mais eventos.");
     td.colSpan = 5;
     tr.append(td);
     el.corpo.replaceChildren(tr);
@@ -160,6 +167,11 @@ el.btnPausa.addEventListener("click", () => {
 
 el.filtro.addEventListener("change", () => {
   filtro = el.filtro.value;
+  renderizar();
+});
+
+el.busca.addEventListener("input", () => {
+  busca = norm(el.busca.value);
   renderizar();
 });
 
@@ -260,10 +272,17 @@ function iniciar() {
 
   el.limite.textContent = `Mostrando até ${MAX_EVENTOS} alertas recentes`;
 
+  // ?q=texto (vindo da busca global) já abre o feed filtrado
+  const pedido = (new URLSearchParams(location.search).get("q") || "").slice(0, 80);
+  el.busca.value = pedido;
+  busca = norm(pedido);
+  // a simulação começa com alguns alertas do que foi buscado, para a tabela não abrir vazia
+  const buscados = busca ? MODELOS.filter(combina) : [];
+
   // 8 eventos iniciais, espaçados de 15 s para trás (mais novo no topo)
   const agora = Date.now();
   eventos = Array.from({ length: 8 }, (_, i) => {
-    const e = gerarEvento();
+    const e = i % 3 === 0 && buscados.length ? gerarEvento(buscados) : gerarEvento();
     e.data = new Date(agora - (8 - i) * 15000);
     return e;
   }).reverse();

@@ -60,6 +60,67 @@ button, input, select, textarea { font: inherit; }
 .page-header h1 { font-size: 18px; font-weight: 700; color: var(--texto); }
 .muted { color: var(--suave); font-size: 11px; margin-top: 4px; }
 
+/* ---------- Busca global (js/busca.js) ----------
+   Barra no topo do conteúdo de todas as telas; a lista de
+   resultados abre por cima da página. */
+.topo-busca { display: flex; }
+.busca { position: relative; width: min(460px, 100%); }
+.busca-ic {
+  position: absolute; left: 11px; top: calc(var(--controle) / 2 + 1px); transform: translateY(-50%);
+  width: 16px; height: 16px; pointer-events: none;
+  fill: none; stroke: var(--suave); stroke-width: 2; stroke-linecap: round;
+}
+.content .busca input[type="search"] {
+  width: 100%;
+  height: calc(var(--controle) + 2px);
+  padding: 0 38px 0 35px;
+}
+.busca input::placeholder { color: var(--suave); opacity: 1; }
+.busca input::-webkit-search-cancel-button { cursor: pointer; }
+.busca-atalho {
+  position: absolute; right: 8px; top: calc(var(--controle) / 2 + 1px); transform: translateY(-50%);
+  min-width: 20px; padding: 1px 6px;
+  border: 1px solid var(--linha); border-radius: var(--raio-sm);
+  background: var(--faixa); color: var(--suave);
+  font: 600 11px/1.5 var(--fonte); text-align: center; pointer-events: none;
+}
+/* com texto digitado o lugar é do "x" de limpar */
+.busca input:not(:placeholder-shown) ~ .busca-atalho { display: none; }
+.content .busca input:not(:placeholder-shown) { padding-right: 10px; }
+
+.busca-lista {
+  position: absolute; z-index: 30; top: calc(100% + 6px); left: 0;
+  width: 100%; max-height: min(420px, 70vh); overflow-y: auto;
+  padding: 6px;
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: 0 10px 28px rgba(18, 32, 46, .16);
+}
+.busca-grupo + .busca-grupo { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--linha); }
+.busca-grupo-nome { padding: 6px 10px 4px; font-size: 11px; font-weight: 600; color: var(--suave); }
+.busca-op {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 7px 10px; border-radius: var(--raio-sm);
+  color: var(--texto); text-decoration: none; cursor: pointer;
+}
+.busca-op[aria-selected="true"] { background: var(--destaque-fundo); }
+.busca-corpo { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.busca-titulo { font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+.busca-titulo mark { background: none; color: inherit; font-weight: 800; }
+.busca-detalhe { font-size: 12px; color: var(--suave); }
+.busca-op[aria-selected="true"] .busca-detalhe { color: var(--texto); }
+.busca-vazio { padding: 14px 10px; font-size: 13px; line-height: 1.5; color: var(--suave); }
+.busca-vazio b { color: var(--texto); overflow-wrap: anywhere; }
+.busca-dica { margin-top: 6px; padding: 8px 10px 4px; border-top: 1px solid var(--linha); font-size: 11px; color: var(--suave); }
+
+@media (max-width: 800px) {
+  .busca { width: 100%; }
+  .busca-atalho, .busca-dica { display: none; } /* sem teclado físico */
+  .content .busca input[type="search"] { padding-right: 10px; }
+}
+@media print { .topo-busca { display: none; } }
+
 /* ---------- Filtros e campos ---------- */
 .filtros { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .filtro, .campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; color: var(--suave); }

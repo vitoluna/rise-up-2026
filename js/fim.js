@@ -239,9 +239,17 @@ $("#simular").addEventListener("click", simularAlteracao);
 
 carregar().then(() => {
     montarFiltroHost();
-    // abre direto no primeiro arquivo modificado (ou em ?arquivo=/etc/passwd)
-    const pedido = new URLSearchParams(location.search).get("arquivo");
-    const inicial = arquivos.find((f) => f.caminho === pedido) || arquivos.find((f) => f.modificado);
+    // abre direto no primeiro arquivo modificado, ou no que a busca pediu:
+    // ?host=host-db-01 filtra o host e ?arquivo=/etc/passwd seleciona o arquivo.
+    // Só valem valores que existem nos dados; o resto é ignorado.
+    const params = new URLSearchParams(location.search);
+    const pedido = params.get("arquivo");
+    const hostPedido = params.get("host");
+    if (arquivos.some((f) => f.host === hostPedido)) {
+        estado.host = hostPedido;
+        $("#host").value = hostPedido;
+    }
+    const inicial = visiveis().find((f) => f.caminho === pedido) || visiveis().find((f) => f.modificado);
     if (inicial) estado.selecionado = inicial.id;
     renderizar();
 });

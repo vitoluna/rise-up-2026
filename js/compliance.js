@@ -416,7 +416,12 @@ function exportarPDF() {
 /* ---------- Init ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ?req=8 (vindo da busca) já abre o requisito; número fora da lista é ignorado
+  const reqPedido = Number(new URLSearchParams(location.search).get("req"));
+  if (reqPorNumero(reqPedido)) estado.selecionado = reqPedido;
+
   renderGrafico(renderPainel());
+  if (estado.selecionado) $("#detalhe").scrollIntoView({ block: "nearest" });
 
   $("#periodo").addEventListener("change", (e) => {
     estado.periodo = Number(e.target.value);

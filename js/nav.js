@@ -61,6 +61,33 @@
     return a;
   }
 
+  // usado pela busca global (js/busca.js)
+  window.SecViewNav = { ITENS, base };
+
+  // Logo: o símbolo da marca (fechadura com olho, de css/logoSite.JPG)
+  // redesenhado em SVG, à esquerda do nome. Decorativo: o nome já é lido.
+  const marca = raiz.closest(".sidebar")?.querySelector(".brand");
+  if (marca && !marca.querySelector(".brand-logo")) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "brand-logo");
+    svg.setAttribute("viewBox", "0 0 24 32");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    const forma = (tag, attrs) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      return el;
+    };
+    svg.append(
+      forma("path", { d: "M12 1a10 10 0 0 1 5.2 18.54l1.4 9.76a1.5 1.5 0 0 1-1.5 1.7H6.9a1.5 1.5 0 0 1-1.5-1.7l1.4-9.76A10 10 0 0 1 12 1Z" }),
+      forma("path", { class: "furo", d: "M4.6 11Q12 4.2 19.4 11 12 17.8 4.6 11Z" }),
+      forma("circle", { cx: 12, cy: 11, r: 2.9 }),
+      forma("circle", { class: "furo", cx: 12, cy: 11, r: 1.4 })
+    );
+    marca.prepend(svg);
+  }
+
   raiz.setAttribute("aria-label", "Navegação principal");
   raiz.replaceChildren(...ITENS.map(criarLink));
 
