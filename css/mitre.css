@@ -17,6 +17,7 @@
 .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; background: var(--linha-forte); }
 .sw.sem { background: var(--faixa); border: 1px solid var(--linha); }
 .nota { margin-top: 12px; }
+.ia-just { display: block; margin-top: 3px; font-size: 11px; line-height: 1.4; color: var(--suave); }
 
 /* ---------- Matriz ---------- */
 .matriz-rolagem { overflow-x: auto; margin-top: 16px; padding-bottom: 8px; }

@@ -430,3 +430,23 @@ svg line.grade {
 :root[data-tema="escuro"] .c1 {
     color: var(--destaque-claro)
 }
+
+/* ---------- Resumo do turno (IA) ---------- */
+.ia-resumo .hd { align-items: center; row-gap: 10px; }
+#ia-resumo-corpo > .ia-estado { margin-top: 12px; }
+.ia-resumo-corpo {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--linha);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--texto)
+}
+.ia-resumo-corpo > * { max-width: 80ch }
+.ia-resumo-corpo h4 { margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--suave) }
+.ia-prioridades { gap: 6px }
+.ia-prioridades li b { margin-right: 6px }
+.ia-prioridades li span { margin-right: 8px }
+.ia-link { color: var(--destaque); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap }

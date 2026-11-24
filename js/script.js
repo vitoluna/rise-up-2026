@@ -209,3 +209,69 @@ conformidadeLista(document.getElementById('comp'), conformidade);
 document.getElementById('hosts').insertAdjacentHTML('beforeend', topHosts.map(h =>
     `<div><i class="host-ic">${h.sigla}</i><span>${h.nome}<small>${h.funcao}</small></span><em>${fmt(h.alertas)} alertas</em></div>`
 ).join(''));
+
+// ---------- Resumo do turno com IA (js/ia.js) ----------
+// Sob demanda: manda os números desta tela ao servidor e mostra o resumo.
+(() => {
+    const IA = window.SecViewIA;
+    const acao = document.getElementById('ia-resumo-acao');
+    const corpo = document.getElementById('ia-resumo-corpo');
+    if (!IA || !acao || !corpo) return;
+
+    const TELAS = {
+        feed: ['Feed de alertas', 'feed/index.html'],
+        fim: ['FIM', 'fim.html'],
+        regras: ['Regras custom', 'regras/regras.html'],
+        compliance: ['Compliance', 'compliance.html'],
+        mitre: ['MITRE ATT&CK', 'mitre.html'],
+    };
+    const txt = el => (el && el.textContent ? el.textContent : '').trim().slice(0, 120);
+    const botao = IA.botao('Gerar resumo');
+    acao.append(botao);
+
+    function painel() {
+        return {
+            kpis: [...document.querySelectorAll('.kpi')].map(k => ({ nome: txt(k.querySelector('small')), valor: txt(k.querySelector('strong')), detalhe: txt(k.querySelector('p')) })),
+            alertasPorHora: horas.map((hora, i) => ({ hora, alertas: alertas[i], incidentes: incidentes[i] })),
+            categorias: abertosResolvidos.map(([nome, abertos, resolvidos]) => ({ nome, abertos, resolvidos })),
+            severidade: severidade.map(s => ({ nome: s.nome, pct: s.pct })),
+            hosts: DADOS.HOSTS.map(h => ({ nome: h.nome, alertas: h.alertas })),
+            mitre: [...document.querySelectorAll('.heat > div')].map(d => ({ tatica: txt(d.firstChild), alertas: Number(txt(d.querySelector('b'))) || 0 })),
+        };
+    }
+
+    function render(r) {
+        const c = IA.criar;
+        const bloco = c('div', 'ia-resumo-corpo');
+        bloco.append(c('p', 'ia-destaque', r.titulo), c('p', '', r.resumo));
+        if (r.prioridades.length) {
+            const lista = c('ol', 'ia-lista ia-prioridades');
+            r.prioridades.forEach(p => {
+                const [nome, href] = TELAS[p.tela];
+                const li = c('li');
+                const link = c('a', 'ia-link', `Abrir ${nome}`);
+                link.href = href;
+                li.append(c('b', '', p.titulo), c('span', '', p.motivo), link);
+                lista.append(li);
+            });
+            bloco.append(IA.secao('O que olhar primeiro', lista));
+        }
+        bloco.append(IA.nota());
+        corpo.replaceChildren(bloco);
+    }
+
+    async function gerar() {
+        botao.disabled = true;
+        corpo.hidden = false;
+        IA.carregando(corpo, 'Lendo os números do turno…');
+        try {
+            render(await IA.pedir('resumo', painel()));
+            botao.querySelector('span').textContent = 'Gerar de novo';
+        } catch (e) {
+            IA.erro(corpo, e.message, gerar);
+        } finally {
+            botao.disabled = false;
+        }
+    }
+    botao.addEventListener('click', gerar);
+})();

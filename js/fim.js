@@ -164,10 +164,18 @@ function renderDetalhe() {
     topo.append(titulo);
 
     if (f.modificado) {
+        const acoes = criar("div", "detalhe-acoes");
+        if (window.SecViewIA) {
+            const ia = window.SecViewIA.botao("Analisar com IA");
+            ia.id = "analisar-ia";
+            ia.disabled = analisesIA.get(chaveIA(f))?.estado === "carregando";
+            acoes.append(ia);
+        }
         const aprovar = criar("button", "btn primario", "Aprovar alteração");
         aprovar.type = "button";
         aprovar.id = "aprovar";
-        topo.append(aprovar);
+        acoes.append(aprovar);
+        topo.append(acoes);
     }
 
     const hashes = criar("div", "hashes");
@@ -185,6 +193,12 @@ function renderDetalhe() {
             diff.append(lin);
         });
         filhos.push(diff);
+        const ia = criar("div", "fim-ia");
+        ia.id = "fim-ia";
+        ia.setAttribute("aria-live", "polite");
+        ia.tabIndex = -1;
+        renderFimIA(f, ia);
+        filhos.push(ia);
     } else {
         filhos.push(criar("p", "detalhe-vazio", "Nenhuma diferença em relação ao baseline."));
     }
@@ -196,6 +210,72 @@ function renderizar() {
     renderResumo(lista);
     $("#arvore").replaceChildren(renderNo(montarArvore(lista)));
     renderDetalhe();
+}
+
+/* ---------- Análise da alteração com IA ----------
+   Sob demanda. O resultado fica guardado pelo arquivo + hash atual:
+   se o arquivo mudar de novo, a análise antiga não é reaproveitada. */
+const analisesIA = new Map();
+const chaveIA = (f) => `${f.id}:${f.hashAtual}`;
+
+const VEREDITO = {
+    suspeita: ["tag bad", "Alteração suspeita"],
+    legitima: ["tag ok", "Parece legítima"],
+    inconclusiva: ["tag warn", "Inconclusiva"],
+};
+const RECOMENDACAO = {
+    investigar: "Investigar antes de aprovar",
+    reverter: "Reverter para o baseline",
+    aprovar: "Pode aprovar como novo baseline",
+};
+
+function renderFimIA(f, alvo) {
+    const IA = window.SecViewIA;
+    const st = analisesIA.get(chaveIA(f));
+    if (!IA || !st) { alvo.hidden = true; return; }
+    if (st.estado === "carregando") { IA.carregando(alvo, "A IA está lendo o diff…"); return; }
+    if (st.estado === "erro") { IA.erro(alvo, st.erro, () => analisarFimIA(f)); return; }
+
+    const r = st.resultado;
+    const bloco = IA.bloco("Análise da IA");
+    const [classe, rotulo] = VEREDITO[r.veredito];
+    const linha = criar("div", "ia-linha");
+    linha.append(criar("span", classe, rotulo), criar("span", "chip sev-" + r.severidade, SEV[r.severidade]));
+    bloco.append(linha, criar("p", "", r.resumo));
+
+    if (r.achados.length) {
+        const ul = criar("ul", "ia-lista ia-achados");
+        r.achados.forEach((a) => {
+            const li = criar("li");
+            li.append(criar("code", "ia-codigo", a.linha), criar("span", "", a.motivo));
+            ul.append(li);
+        });
+        bloco.append(window.SecViewIA.secao("Linhas que importam", ul));
+    }
+    const rec = criar("div");
+    rec.append(criar("p", "ia-destaque", RECOMENDACAO[r.recomendacao]));
+    if (r.proximosPassos.length) rec.append(IA.lista(r.proximosPassos));
+    bloco.append(IA.secao("Recomendação", rec), IA.nota());
+    alvo.replaceChildren(bloco);
+}
+
+async function analisarFimIA(f) {
+    const chave = chaveIA(f);
+    analisesIA.set(chave, { estado: "carregando" });
+    renderizar();
+    $("#fim-ia")?.focus();
+    try {
+        const resultado = await window.SecViewIA.pedir("fim", {
+            host: f.host,
+            caminho: f.caminho,
+            severidade: f.severidade || "alto",
+            diff: diffLinhas(f.base, f.atual).slice(0, 200).map(({ t, l }) => ({ tipo: t, linha: l.slice(0, 300) })),
+        });
+        analisesIA.set(chave, { estado: "ok", resultado });
+    } catch (erro) {
+        analisesIA.set(chave, { estado: "erro", erro: erro.message });
+    }
+    renderizar();
 }
 
 /* ---------- Ações ---------- */
@@ -234,7 +314,13 @@ $("#arvore").addEventListener("click", (e) => {
     estado.selecionado = btn.dataset.id;
     renderizar();
 });
-$("#detalhe").addEventListener("click", (e) => { if (e.target.id === "aprovar") aprovar(); });
+$("#detalhe").addEventListener("click", (e) => {
+    if (e.target.closest("#aprovar")) aprovar();
+    if (e.target.closest("#analisar-ia")) {
+        const f = arquivos.find((x) => x.id === estado.selecionado);
+        if (f && f.modificado) analisarFimIA(f);
+    }
+});
 $("#simular").addEventListener("click", simularAlteracao);
 
 carregar().then(() => {

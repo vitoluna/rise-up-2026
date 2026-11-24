@@ -8,8 +8,10 @@
 
   /* ---------- Configuração ---------- */
   const CONFIG = {
-    emailDemo: "secview@gmail.com",   // usuário simulado
-    senhaDemo: "@Sec123",             // senha inicial (pode ser trocada em "Redefinir senha")
+    // Login universal (SIMULAÇÃO): este e-mail e esta senha sempre entram,
+    // mesmo depois de uma senha redefinida. Ficam visíveis no código do navegador.
+    emailUniversal: "secview@gmail.com",
+    senhaUniversal: "secview123",
     falhasParaBloquear: 4,            // a 4ª falha bloqueia → após a 3ª o usuário é avisado
     bloqueioSegundos: 60,             // duração do bloqueio
     destino: "index.html",            // para onde ir após logar (dashboard)
@@ -34,7 +36,8 @@
   /* ---------- Helpers ---------- */
   const emailValido = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  const senhaAtual = () => ler(CHAVES.senha) || CONFIG.senhaDemo;
+  // Senha criada em "Redefinir senha" (opcional): vale junto com a universal
+  const senhaRedefinida = () => ler(CHAVES.senha);
 
   const getFalhas = () => Number(ler(CHAVES.falhas)) || 0;
 
@@ -122,7 +125,10 @@
     iniciarBloqueio(ate);
   }
 
-  function registrarFalha() {
+  function registrarFalha(email) {
+    // Regras de login (tela Regras custom): a cada N erros seguidos, um alerta vai ao feed
+    if (typeof registrarFalhaLogin === "function") registrarFalhaLogin(email);
+
     const falhas = getFalhas() + 1;
     gravar(CHAVES.falhas, String(falhas));
 
@@ -138,6 +144,7 @@
 
   /* ---------- Sucesso ---------- */
   function entrar(email) {
+    if (typeof zerarFalhasLogin === "function") zerarFalhasLogin();
     remover(CHAVES.falhas);
     remover(CHAVES.bloqueioAte);
 
@@ -191,12 +198,13 @@
     }
 
     // Conferência das credenciais (simulada)
-    const ok = email.toLowerCase() === CONFIG.emailDemo && senha === senhaAtual();
+    const ok = email.toLowerCase() === CONFIG.emailUniversal &&
+      (senha === CONFIG.senhaUniversal || (Boolean(senhaRedefinida()) && senha === senhaRedefinida()));
 
     if (ok) {
       entrar(email);
     } else {
-      registrarFalha();
+      registrarFalha(email);
     }
   });
 

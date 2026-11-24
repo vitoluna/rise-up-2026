@@ -12,6 +12,7 @@
 
   // Blocos do Dashboard (mesmos data-secao de index.html)
   const SECOES = [
+    ["resumo-ia", "Resumo do turno (IA)"],
     ["kpis", "Indicadores do topo"],
     ["alertas-incidentes", "Alertas e incidentes"],
     ["categorias", "Alertas por categoria"],

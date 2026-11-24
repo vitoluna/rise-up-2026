@@ -111,9 +111,15 @@ const REGRAS = [
 const PESO = { critico: 3, alto: 2, medio: 1, info: 0 };
 const SEV_POR_PESO = ["info", "medio", "alto", "critico"];
 
-function tecnicaDoEvento(e) {
+function tecnicaPorRegra(e) {
   const regra = REGRAS.find((r) => r.teste.test(e.descricao));
   return regra ? regra.tecnica : null;
+}
+
+// Com o mapeamento da IA ligado, ele vale no lugar das regras fixas
+function tecnicaDoEvento(e) {
+  if (estado.fonte === "ia" && estado.mapaIA && estado.mapaIA.has(e.descricao)) return estado.mapaIA.get(e.descricao).tecnica;
+  return tecnicaPorRegra(e);
 }
 
 /* ---------- Estado ---------- */
@@ -122,13 +128,16 @@ const estado = {
   periodo: 30,
   soDetectadas: false,
   selecionada: null,
+  fonte: "regras",   // "regras" (fixas) | "ia"
+  mapaIA: null,      // Map(descrição → { tecnica, confianca, justificativa })
+  ia: null,          // { estado: "carregando" | "erro", erro }
 };
 
 /** Eventos dentro do período, já com a técnica associada. */
 function eventosDoPeriodo() {
   return DADOS.EVENTOS
     .filter((e) => e.dia <= estado.periodo)
-    .map((e) => ({ ...e, tecnica: tecnicaDoEvento(e) }));
+    .map((e) => ({ ...e, tecnica: tecnicaDoEvento(e), ia: estado.fonte === "ia" ? estado.mapaIA?.get(e.descricao) ?? null : null }));
 }
 
 /** { T1110: { eventos: [...], sev: "critico" } } — só técnicas com evento. */
@@ -268,7 +277,7 @@ function renderDetalhe(porTecnica) {
         <tr>
           <td>${e.dia === 1 ? "1 dia" : e.dia + " dias"}</td>
           <td>${esc(e.origem)}</td>
-          <td class="desc">${esc(e.descricao)}</td>
+          <td class="desc">${esc(e.descricao)}${e.ia ? `<small class="ia-just">IA, confiança ${esc(e.ia.confianca)}: ${esc(e.ia.justificativa)}</small>` : ""}</td>
           <td><span class="sev sev-${e.severidade}">${DADOS.SEVERIDADES[e.severidade]}</span></td>
         </tr>`).join("");
     corpo = `
@@ -291,6 +300,74 @@ function renderDetalhe(porTecnica) {
     ${corpo}`;
 }
 
+/* ---------- Mapeamento com IA ----------
+   Manda à IA cada descrição de evento (sem repetir) e o catálogo de
+   técnicas desta tela; a IA só pode escolher técnicas do catálogo. */
+const IA_CONFIANCA = { alta: "alta", media: "média", baixa: "baixa" };
+
+async function mapearComIA() {
+  const IA = window.SecViewIA;
+  estado.ia = { estado: "carregando" };
+  renderFaixaIA();
+  const unicos = new Map();
+  DADOS.EVENTOS.forEach((e) => { if (!unicos.has(e.descricao)) unicos.set(e.descricao, e.categoria); });
+  try {
+    const r = await IA.pedir("mitre", {
+      eventos: [...unicos].map(([descricao, categoria]) => ({ descricao, categoria })),
+      tecnicas: Object.entries(TECNICAS).map(([id, nome]) => ({ id, nome })),
+    });
+    estado.mapaIA = new Map(r.mapeamentos.map((m) => [m.descricao, {
+      tecnica: m.tecnica && TECNICAS[m.tecnica] ? m.tecnica : null,
+      confianca: IA_CONFIANCA[m.confianca] || m.confianca,
+      justificativa: m.justificativa,
+    }]));
+    estado.fonte = "ia";
+    estado.ia = null;
+  } catch (erro) {
+    estado.ia = { estado: "erro", erro: erro.message };
+  }
+  render();
+}
+
+function renderFaixaIA() {
+  const IA = window.SecViewIA;
+  const alvo = $("#mitre-ia");
+  if (!IA || !alvo) return;
+  const botao = $("#mapear-ia");
+  if (botao) botao.disabled = estado.ia?.estado === "carregando";
+
+  if (estado.ia?.estado === "carregando") { alvo.hidden = false; IA.carregando(alvo, "A IA está mapeando os eventos para técnicas…"); return; }
+  if (estado.ia?.estado === "erro") { alvo.hidden = false; IA.erro(alvo, estado.ia.erro, mapearComIA); return; }
+  if (!estado.mapaIA) { alvo.hidden = true; return; }
+
+  const todos = DADOS.EVENTOS;
+  const pelaIA = todos.filter((e) => estado.mapaIA.get(e.descricao)?.tecnica).length;
+  const pelasRegras = todos.filter((e) => tecnicaPorRegra(e)).length;
+  const novos = todos.filter((e) => estado.mapaIA.get(e.descricao)?.tecnica && !tecnicaPorRegra(e)).length;
+  const diferentes = todos.filter((e) => {
+    const ia = estado.mapaIA.get(e.descricao)?.tecnica, regra = tecnicaPorRegra(e);
+    return ia && regra && ia !== regra;
+  }).length;
+
+  const bloco = IA.bloco(estado.fonte === "ia" ? "Matriz com o mapeamento da IA" : "Mapeamento da IA disponível");
+  const texto = IA.criar("p", "",
+    `A IA ligou ${pelaIA} de ${todos.length} eventos a uma técnica; as regras fixas ligam ${pelasRegras}. ` +
+    `${novos} ${plural(novos, "evento ganhou técnica", "eventos ganharam técnica")} e ${diferentes} ${plural(diferentes, "mudou", "mudaram")} de técnica. ` +
+    "Na tabela de cada técnica, a justificativa da IA aparece embaixo do evento.");
+  const trocar = IA.criar("button", "btn", estado.fonte === "ia" ? "Voltar às regras fixas" : "Usar o mapeamento da IA");
+  trocar.type = "button";
+  trocar.addEventListener("click", () => {
+    estado.fonte = estado.fonte === "ia" ? "regras" : "ia";
+    render();
+    $("#mitre-ia .btn")?.focus();
+  });
+  const linha = IA.criar("div", "ia-linha");
+  linha.append(trocar);
+  bloco.append(texto, linha, IA.nota());
+  alvo.hidden = false;
+  alvo.replaceChildren(bloco);
+}
+
 /* ---------- Ciclo de render ---------- */
 
 function render() {
@@ -299,11 +376,19 @@ function render() {
   const porTatica = renderResumo(eventos, porTecnica);
   renderMatriz(porTecnica, porTatica);
   renderDetalhe(porTecnica);
+  renderFaixaIA();
 }
 
 /* ---------- Init ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.SecViewIA) {
+    const botao = window.SecViewIA.botao("Mapear com IA");
+    botao.id = "mapear-ia";
+    botao.addEventListener("click", mapearComIA);
+    $(".mitre-topo .filtros").append(botao);
+  }
+
   $("#periodo").addEventListener("change", (e) => {
     estado.periodo = Number(e.target.value);
     render();

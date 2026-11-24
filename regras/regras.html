@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="regras.css">
   <link rel="stylesheet" href="../css/nav.css">
+  <script src="../js/comum.js"></script>
+  <script>SecView.exigirSessao("../login.html");</script>
 </head>
 <body>
 <div class="shell">
@@ -32,6 +34,8 @@
 
       <section class="panel nova" aria-labelledby="t-nova">
         <h2 id="t-nova">Nova regra</h2>
+        <!-- Montar com IA (preenchido por regras/regra.js quando js/ia.js está carregado) -->
+        <form class="ia-montar" id="form-ia" novalidate hidden></form>
         <form id="form" class="grade" novalidate>
           <label class="campo">
             <span>Nome (opcional)</span>
@@ -83,15 +87,15 @@
       </div>
 
       <p class="nota">
-        Regras de <strong>login</strong> valem na tela de login (a cada N erros seguidos, um alerta é enviado ao feed).
+        Regras de <strong>login</strong> valem na tela de login: a cada N senhas erradas seguidas, um alerta entra no feed (na hora, se o feed estiver aberto, ou quando ele for aberto). A contagem só recomeça quando o login dá certo.
         Regras de <strong>texto</strong> valem para os eventos que chegarem ao feed depois de salvas.
       </p>
   </main>
 
 </div>
-<script src="../js/comum.js"></script>
 <script src="../js/dados.js"></script>
 <script src="../js/nav.js"></script>
+<script src="../js/ia.js"></script>
 <script src="../js/busca.js"></script>
 <script src="regrabase.js"></script>
 <script src="regra.js"></script>

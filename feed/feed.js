@@ -41,6 +41,7 @@ const el = {
   filtro: $("filtro"), busca: $("busca-feed"), btnPausa: $("btn-pausa"), corpo: $("corpo"), limite: $("limite"),
   rec: $("rec"), recTitulo: $("rec-titulo"), recMeta: $("rec-meta"), recPrior: $("rec-prior"),
   recOque: $("rec-oque"), recAcoes: $("rec-acoes"), recProg: $("rec-prog"), recRefs: $("rec-refs"),
+  recIa: $("rec-ia"),
 };
 
 /* ---------- Utilitários ---------- */
@@ -138,12 +139,30 @@ function renderizar() {
 }
 
 /* ---------- Feed: iniciar / pausar ---------- */
+// Alertas das regras de login (fila preenchida pela tela de login, js em regras/regrabase.js).
+// Já chegam com a severidade da regra; as regras de texto não mudam essa severidade.
+function alertasDoLogin() {
+  return consumirAlertasLogin().reverse().map((a) => {
+    contador += 1;
+    return { id: contador, ...a };
+  });
+}
+
 function iniciarFeed() {
   timer = setInterval(() => {
-    eventos = [gerarEvento(), ...eventos].slice(0, MAX_EVENTOS);
+    eventos = [gerarEvento(), ...alertasDoLogin(), ...eventos].slice(0, MAX_EVENTOS);
     renderizar();
   }, INTERVALO_MS);
 }
+
+// Login errado em outra aba: o alerta aparece aqui na hora (se o feed não estiver pausado)
+window.addEventListener("storage", (e) => {
+  if (e.key !== CHAVE_ALERTAS_LOGIN || pausado || pausadoPeloPainel) return;
+  const novos = alertasDoLogin();
+  if (!novos.length) return;
+  eventos = [...novos, ...eventos].slice(0, MAX_EVENTOS);
+  renderizar();
+});
 
 function pararFeed() {
   clearInterval(timer);
@@ -205,6 +224,66 @@ function renderizarAcoes() {
   el.recProg.textContent = `${marcadas.size} de ${rec.acoes.length} concluídas`;
 }
 
+/* ---------- Análise com IA (painel de recomendação) ----------
+   Só roda quando o analista pede. O resultado fica guardado por alerta,
+   então reabrir o mesmo alerta não gera um novo pedido. */
+const analisesIA = new Map(); // id do alerta → { estado, resultado | erro }
+const paraIA = (e) => ({ evento: e.evento.slice(0, 160), origem: e.origem.slice(0, 60), severidade: e.severidade, hora: formatarHora(e.data) });
+
+async function analisarComIA(alerta) {
+  analisesIA.set(alerta.id, { estado: "carregando" });
+  renderIA();
+  el.recIa.focus();
+  // até 10 alertas recentes do mesmo host, para a IA ver se há uma sequência de ataque
+  const recentes = eventos.filter((e) => e.origem === alerta.origem && e.id !== alerta.id).slice(0, 10).map(paraIA);
+  try {
+    const resultado = await window.SecViewIA.pedir("alerta", { alerta: paraIA(alerta), recentes });
+    analisesIA.set(alerta.id, { estado: "ok", resultado });
+  } catch (erro) {
+    analisesIA.set(alerta.id, { estado: "erro", erro: erro.message });
+  }
+  if (alertaAberto && alertaAberto.id === alerta.id) renderIA();
+}
+
+function renderIA() {
+  const IA = window.SecViewIA;
+  const alvo = el.recIa;
+  const alerta = alertaAberto;
+  alvo.hidden = !IA || !alerta;
+  if (alvo.hidden) return;
+
+  const st = analisesIA.get(alerta.id);
+  if (!st) {
+    const btn = IA.botao("Analisar com IA");
+    btn.addEventListener("click", () => analisarComIA(alerta));
+    const dica = criar("span", "rec-ia-dica", "A IA explica o alerta no contexto dos outros alertas deste host.");
+    alvo.replaceChildren(btn, dica);
+    return;
+  }
+  if (st.estado === "carregando") { IA.carregando(alvo, "Analisando o alerta…"); return; }
+  if (st.estado === "erro") { IA.erro(alvo, st.erro, () => analisarComIA(alerta)); return; }
+
+  const r = st.resultado;
+  const bloco = IA.bloco("Análise da IA");
+  bloco.append(criar("p", "", r.resumo), IA.secao("Por que importa", r.porQueImporta));
+
+  const sev = criar("div", "ia-linha");
+  sev.append(badge(r.severidadeSugerida));
+  if (r.severidadeSugerida !== alerta.severidade) sev.append(criar("small", "", `atual: ${SEVERIDADES[alerta.severidade]}`));
+  const blocoSev = criar("div");
+  blocoSev.append(sev, criar("p", "", r.justificativa));
+  bloco.append(IA.secao("Severidade sugerida", blocoSev));
+
+  if (r.acoes.length) bloco.append(IA.secao("O que fazer, na ordem", IA.lista(r.acoes)));
+  if (r.tecnicaMitre && r.tecnicaMitre.id) {
+    const chip = criar("div", "ia-linha");
+    chip.append(criar("span", "chip", `MITRE ATT&CK · ${r.tecnicaMitre.id} ${r.tecnicaMitre.nome}`));
+    bloco.append(IA.secao("Técnica provável", chip));
+  }
+  bloco.append(IA.secao("Relação com outros alertas do host", r.relacionados), IA.nota());
+  alvo.replaceChildren(bloco);
+}
+
 function abrirRecomendacao(id) {
   const alerta = eventos.find((e) => e.id === id);
   if (!alerta) return;
@@ -228,6 +307,7 @@ function abrirRecomendacao(id) {
   el.recRefs.hidden = refs.length === 0;
 
   renderizarAcoes();
+  renderIA();
 
   // pausa o feed para a tabela não mudar por baixo do painel
   if (!pausado && timer) {
@@ -286,6 +366,8 @@ function iniciar() {
     e.data = new Date(agora - (8 - i) * 15000);
     return e;
   }).reverse();
+  // alertas de login gerados enquanto o feed estava fechado entram no topo
+  eventos = [...alertasDoLogin(), ...eventos].slice(0, MAX_EVENTOS);
 
   atualizarPausa();
   renderizar();

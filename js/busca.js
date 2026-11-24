@@ -187,6 +187,92 @@
     opcoes[ativa].scrollIntoView({ block: "nearest" });
   }
 
+  /* ---------- Perguntar à IA ----------
+     A última opção da lista manda o texto como pergunta ao servidor
+     (js/ia.js). A resposta aparece no lugar dos resultados, com links
+     para o que ela citar (resolvidos pelo próprio índice da busca). */
+  const GRUPO_IA = { host: "Hosts", evento: "Eventos", arquivo: "Arquivos monitorados", requisito: "Requisitos PCI-DSS", tela: "Telas" };
+  let pedidoIA = 0;
+
+  function novaOpcao(classe) {
+    const a = criar("a", `busca-op ${classe || ""}`.trim());
+    a.id = `busca-op-${opcoes.length}`;
+    a.tabIndex = -1;
+    a.setAttribute("role", "option");
+    a.setAttribute("aria-selected", "false");
+    opcoes.push(a);
+    return a;
+  }
+
+  function grupoIA(texto) {
+    const grupo = criar("div", "busca-grupo");
+    grupo.setAttribute("role", "group");
+    grupo.setAttribute("aria-label", "Perguntar à IA");
+    grupo.append(criar("p", "busca-grupo-nome", "Perguntar à IA"));
+    const op = novaOpcao("busca-op-ia");
+    op.dataset.pergunta = texto.slice(0, 300);
+    const corpo = criar("span", "busca-corpo");
+    corpo.append(criar("b", "busca-titulo", `“${texto}”`), criar("span", "busca-detalhe", "A IA responde com base nos dados do SecView"));
+    op.append(window.SecViewIA.icone(), corpo);
+    grupo.append(op);
+    return grupo;
+  }
+
+  async function perguntar(pergunta) {
+    const IA = window.SecViewIA;
+    const n = ++pedidoIA;
+    opcoes = [];
+    ativa = -1;
+    campo.removeAttribute("aria-activedescendant");
+    const area = criar("div", "busca-ia");
+    lista.replaceChildren(area);
+    lista.hidden = false;
+    campo.setAttribute("aria-expanded", "true");
+    IA.carregando(area, "A IA está procurando a resposta nos dados…");
+    aviso.textContent = "Perguntando à IA.";
+
+    let r;
+    try {
+      r = await IA.pedir("pergunta", { pergunta });
+    } catch (e) {
+      if (n !== pedidoIA || !area.isConnected) return;
+      IA.erro(area, e.message, () => perguntar(pergunta));
+      aviso.textContent = e.message;
+      return;
+    }
+    if (n !== pedidoIA || !area.isConnected) return; // o texto mudou ou a lista fechou
+
+    const bloco = IA.bloco("Resposta da IA");
+    bloco.append(criar("p", "busca-ia-pergunta", `“${pergunta}”`));
+    r.resposta.split(/\n+/).filter(Boolean).forEach((par) => bloco.append(criar("p", "", par)));
+
+    const vistos = new Set();
+    const links = [];
+    r.itens.forEach((it) => {
+      const grupo = GRUPO_IA[it.tipo];
+      const alvo = norm(it.nome);
+      const item = indice.find((x) => x.grupo === grupo && x.tituloNorm === alvo) || procurar(it.nome).find((x) => x.grupo === grupo);
+      if (item && !vistos.has(item.href)) { vistos.add(item.href); links.push(item); }
+    });
+    if (links.length) {
+      const g = criar("div", "busca-ia-links");
+      g.append(criar("h4", "", "Abrir"));
+      links.slice(0, 5).forEach((item) => {
+        const a = novaOpcao();
+        a.href = item.href;
+        const corpo = criar("span", "busca-corpo");
+        corpo.append(criar("b", "busca-titulo", item.titulo), criar("span", "busca-detalhe", item.detalhe));
+        a.append(corpo);
+        if (item.sev && SEV[item.sev]) a.append(criar("span", `badge b-${item.sev}`, SEV[item.sev]));
+        g.append(a);
+      });
+      bloco.append(g);
+    }
+    bloco.append(IA.nota());
+    area.replaceChildren(bloco);
+    aviso.textContent = `Resposta da IA: ${r.resposta}`;
+  }
+
   function mostrar() {
     const texto = campo.value.trim();
     if (!texto) { fechar(); aviso.textContent = ""; return; }
@@ -196,11 +282,16 @@
     lista.replaceChildren();
     opcoes = [];
 
+    const comIA = Boolean(window.SecViewIA) && texto.length >= 3;
+
     if (!achados.length) {
       const vazio = criar("p", "busca-vazio");
-      vazio.append("Nada encontrado para ", criar("b", "", `“${texto}”`), ". Tente o nome de uma tela, um host (host-db-01), um evento (brute force) ou um arquivo (/etc/passwd).");
+      vazio.append("Nada encontrado para ", criar("b", "", `“${texto}”`), comIA
+        ? ". Faça a pergunta à IA, que responde com base nos dados do SecView."
+        : ". Tente o nome de uma tela, um host (host-db-01), um evento (brute force) ou um arquivo (/etc/passwd).");
       lista.append(vazio);
-      aviso.textContent = "Nenhum resultado.";
+      if (comIA) lista.append(grupoIA(texto));
+      aviso.textContent = comIA ? "Nenhum resultado. Opção: perguntar à IA." : "Nenhum resultado.";
     } else {
       const grupos = new Map();
       achados.forEach((item) => {
@@ -229,6 +320,7 @@
         });
         lista.append(grupo);
       });
+      if (comIA) lista.append(grupoIA(texto));
       lista.append(criar("p", "busca-dica", "↑ ↓ para escolher · Enter para abrir · Esc para fechar"));
       aviso.textContent = `${opcoes.length} ${opcoes.length === 1 ? "resultado" : "resultados"}.`;
     }
@@ -263,10 +355,19 @@
     const i = opcoes.indexOf(op);
     if (i >= 0 && i !== ativa) ativar(i);
   });
+  // a opção "Perguntar à IA" não é link: pergunta ao servidor
+  lista.addEventListener("click", (e) => {
+    const op = e.target.closest(".busca-op-ia");
+    if (!op) return;
+    e.preventDefault();
+    perguntar(op.dataset.pergunta);
+  });
   // clicar na lista não tira o foco do campo antes do link abrir
   lista.addEventListener("mousedown", (e) => e.preventDefault());
 
-  document.addEventListener("click", (e) => { if (!caixa.contains(e.target)) fechar(); });
+  // composedPath: o clique pode trocar o conteúdo da lista (ex.: Perguntar à IA)
+  // antes de chegar aqui, e aí o alvo já saiu da página
+  document.addEventListener("click", (e) => { if (!e.composedPath().includes(caixa)) fechar(); });
   caixa.addEventListener("focusout", (e) => { if (!caixa.contains(e.relatedTarget)) fechar(); });
 
   // "/" ou Ctrl+K levam ao campo, de qualquer ponto da tela

@@ -114,12 +114,63 @@ button, input, select, textarea { font: inherit; }
 .busca-vazio b { color: var(--texto); overflow-wrap: anywhere; }
 .busca-dica { margin-top: 6px; padding: 8px 10px 4px; border-top: 1px solid var(--linha); font-size: 11px; color: var(--suave); }
 
+/* Perguntar à IA */
+.busca-op-ia { justify-content: flex-start; color: var(--destaque); }
+.busca-op-ia .ia-ic { width: 16px; height: 16px; }
+.busca-op-ia .busca-titulo { color: var(--texto); }
+.busca-ia > .ia-estado { padding: 12px 10px; }
+.busca-ia .ia-bloco { padding: 8px 10px 6px; border: 0; background: none; }
+.busca-ia-pergunta { color: var(--suave); }
+.busca-ia-links { display: grid; gap: 2px; margin: 0 -10px; }
+.busca-ia-links h4 { padding: 0 10px; }
+
 @media (max-width: 800px) {
   .busca { width: 100%; }
   .busca-atalho, .busca-dica { display: none; } /* sem teclado físico */
   .content .busca input[type="search"] { padding-right: 10px; }
 }
 @media print { .topo-busca { display: none; } }
+
+/* ---------- IA (js/ia.js) ----------
+   Botão com contorno na cor de destaque, bloco de resposta em
+   fundo de faixa e a nota de que o conteúdo veio da IA. */
+.ia-ic { width: 15px; height: 15px; flex: none; fill: currentColor; }
+.btn-ia { color: var(--destaque); border-color: var(--destaque); }
+.btn-ia:hover { background: var(--destaque-fundo); }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.ia-bloco {
+  display: grid; gap: 12px;
+  padding: 14px 16px;
+  background: var(--faixa);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  font-size: 13px; line-height: 1.5; color: var(--texto);
+}
+.ia-bloco .ia-cab { display: flex; align-items: center; gap: 7px; color: var(--destaque); }
+.ia-bloco .ia-cab h3 { margin: 0; font-size: 12px; font-weight: 700; color: inherit; }
+.ia-bloco h4 { margin: 0 0 3px; font-size: 12px; font-weight: 600; color: var(--suave); }
+.ia-bloco p { margin: 0; }
+.ia-destaque { font-size: 14px; font-weight: 600; }
+.ia-lista { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.ia-linha { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ia-linha small { color: var(--suave); font-size: 12px; }
+.ia-codigo {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px;
+  padding: 1px 6px; border: 1px solid var(--linha); border-radius: var(--raio-sm);
+  background: var(--cartao); overflow-wrap: anywhere;
+}
+.ia-nota { font-size: 11px; color: var(--suave); }
+
+.ia-estado { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--suave); }
+.ia-estado.erro { color: var(--critico-texto); }
+.ia-estado.carregando::before {
+  content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--linha-forte); border-top-color: var(--destaque);
+  animation: ia-gira .8s linear infinite;
+}
+@keyframes ia-gira { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ia-estado.carregando::before { animation: none; } }
 
 /* ---------- Filtros e campos ---------- */
 .filtros { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }

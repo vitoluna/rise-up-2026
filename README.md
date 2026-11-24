@@ -56,6 +56,27 @@ npm run dev
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
+### Com as análises de IA
+
+As análises com IA (Claude Haiku 5.5) rodam num servidor próprio, que guarda a chave da API:
+
+```bash
+npm install
+cp .env.example .env      # e preencha ANTHROPIC_API_KEY
+npm run ia                # http://localhost:3000
+```
+
+| Tela | O que a IA faz |
+|---|---|
+| Feed de alertas | Explica o alerta no painel de recomendação, sugere severidade e liga com outros alertas do host |
+| FIM | Lê o diff do arquivo e diz se a alteração é suspeita |
+| MITRE ATT&CK | Mapeia os eventos para técnicas do catálogo, com justificativa |
+| Regras custom | Monta a regra a partir de uma frase em português (o analista confere antes de salvar) |
+| Dashboard | Gera o resumo do turno com as prioridades |
+| Busca global | Responde perguntas sobre os dados ("Perguntar à IA") |
+
+A IA só sugere: nenhuma ação é executada sem o analista. Abrindo as páginas sem o servidor (direto do arquivo), o resto funciona e os botões de IA explicam como ligar o servidor.
+
 ## Aplicação publicada
 
 O SecView está hospedado no Render e pode ser acessado publicamente, sem instalar nada:

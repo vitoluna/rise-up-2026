@@ -29,6 +29,11 @@
       <div class="status"><span class="dot"></span>Todos os coletores operando</div>
     </header>
  
+    <section class="card ia-resumo" data-secao="resumo-ia" aria-labelledby="ia-resumo-t">
+      <div class="hd"><div><h2 id="ia-resumo-t">Resumo do turno</h2><p class="sub">A IA lê os números desta tela e aponta o que olhar primeiro</p></div><div id="ia-resumo-acao"></div></div>
+      <div id="ia-resumo-corpo" aria-live="polite" hidden></div>
+    </section>
+
     <section class="kpis" data-secao="kpis">
       <div class="card kpi"><small>Total de alertas</small><div class="row"><strong>2.847</strong></div><p>+140 alertas na última hora</p></div>
       <div class="card kpi"><small>Alertas resolvidos</small><div class="row"><strong>1.523</strong><div class="ring" style="--p:53.5" role="img" aria-label="53,5% dos alertas resolvidos"></div></div><p>53,5% de taxa de resolução</p></div>
@@ -75,6 +80,7 @@
 </div>
 <script src="js/dados.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/ia.js"></script>
 <script src="js/busca.js"></script>
 <script src="js/script.js"></script>
 </body>

@@ -101,6 +101,13 @@
 .detalhe-topo h2 { font-size: 15px; word-break: break-all; }
 
 .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.detalhe-acoes { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* análise da IA, abaixo do diff */
+.fim-ia { margin-top: 14px; }
+.fim-ia:focus { outline: none; }
+.ia-achados { list-style: none; padding-left: 0; gap: 8px; }
+.ia-achados li { display: grid; gap: 3px; justify-items: start; }
 
 .hashes {
   display: grid;

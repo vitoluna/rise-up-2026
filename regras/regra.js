@@ -114,4 +114,55 @@ el.restaurar.addEventListener("click", () => {
   mostrar("Regras padrão restauradas.", "ok");
 });
 
+/* ---------- Montar a regra com IA ----------
+   O analista descreve em português; a IA só PREENCHE o formulário.
+   Nada é salvo até o analista conferir e clicar em "Adicionar regra". */
+function montarFormIA() {
+  const IA = window.SecViewIA;
+  const form = $("form-ia");
+  if (!IA || !form) return;
+
+  const campo = criar("label", "campo");
+  const entrada = criar("input");
+  entrada.id = "ia-descricao";
+  entrada.type = "text";
+  entrada.maxLength = 300;
+  entrada.placeholder = "ex.: 5 senhas erradas seguidas viram alerta alto";
+  campo.append(criar("span", "", "Descreva a regra em português e a IA preenche os campos abaixo"), entrada);
+  const botao = IA.botao("Montar com IA");
+  botao.type = "submit";
+  form.append(campo, botao);
+  form.hidden = false;
+
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const descricao = entrada.value.trim();
+    if (descricao.length < 5) { mostrar("Descreva a regra com pelo menos 5 caracteres.", "erro"); entrada.focus(); return; }
+
+    botao.disabled = true;
+    botao.setAttribute("aria-busy", "true");
+    mostrar("A IA está montando a regra…", "");
+    try {
+      const r = await IA.pedir("regra", { descricao });
+      if (!r.entendeu) {
+        mostrar(r.duvida || "A IA não conseguiu transformar esse pedido numa regra. Reescreva com mais detalhes.", "erro");
+        return;
+      }
+      el.tipo.value = r.tipo;
+      ajustarCampoValor();
+      el.valor.value = r.tipo === "login" ? String(r.tentativas) : r.texto;
+      el.severidade.value = r.severidade;
+      el.nome.value = r.nome;
+      mostrar(`A IA preencheu o formulário: ${r.explicacao} Confira os campos e clique em "Adicionar regra" para salvar.`, "ok");
+      el.form.querySelector('button[type="submit"]').focus();
+    } catch (erro) {
+      mostrar(erro.message, "erro");
+    } finally {
+      botao.disabled = false;
+      botao.removeAttribute("aria-busy");
+    }
+  });
+}
+
+montarFormIA();
 renderizar();
