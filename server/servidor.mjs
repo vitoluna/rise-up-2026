@@ -97,10 +97,10 @@ let usoDoDia = 0;
 function dentroDoLimite(ip) {
   const agora = Date.now();
   if (new Date().toDateString() !== dia) { dia = new Date().toDateString(); usoDoDia = 0; }
-  if (usoDoDia >= LIMITE_POR_DIA) return "O limite diário de análises com IA deste servidor acabou. Tente amanhã.";
+  if (usoDoDia >= LIMITE_POR_DIA) return "A vigIA encerrou o turno: acabou o limite diário de análises deste servidor. Ela volta amanhã.";
 
   const recentes = (porIp.get(ip) || []).filter((t) => agora - t < 60_000);
-  if (recentes.length >= LIMITE_POR_MINUTO) return "Muitas análises seguidas. Espere um minuto e tente de novo.";
+  if (recentes.length >= LIMITE_POR_MINUTO) return "Muitas análises seguidas: até a vigIA precisa respirar. Espere um minuto e tente de novo.";
   recentes.push(agora);
   porIp.set(ip, recentes);
   usoDoDia += 1;
@@ -187,5 +187,5 @@ const servidor = http.createServer(async (req, res) => {
 });
 
 servidor.listen(PORTA, () => {
-  console.log(`SecView em http://localhost:${PORTA}  (IA: ${ia.MODELO})`);
+  console.log(`SecView em http://localhost:${PORTA}  (vigIA: ${ia.MODELO})`);
 });

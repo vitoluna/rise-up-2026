@@ -277,7 +277,7 @@ function renderDetalhe(porTecnica) {
         <tr>
           <td>${e.dia === 1 ? "1 dia" : e.dia + " dias"}</td>
           <td>${esc(e.origem)}</td>
-          <td class="desc">${esc(e.descricao)}${e.ia ? `<small class="ia-just">IA, confiança ${esc(e.ia.confianca)}: ${esc(e.ia.justificativa)}</small>` : ""}</td>
+          <td class="desc">${esc(e.descricao)}${e.ia ? `<small class="ia-just">vigIA, confiança ${esc(e.ia.confianca)}: ${esc(e.ia.justificativa)}</small>` : ""}</td>
           <td><span class="sev sev-${e.severidade}">${DADOS.SEVERIDADES[e.severidade]}</span></td>
         </tr>`).join("");
     corpo = `
@@ -336,7 +336,7 @@ function renderFaixaIA() {
   const botao = $("#mapear-ia");
   if (botao) botao.disabled = estado.ia?.estado === "carregando";
 
-  if (estado.ia?.estado === "carregando") { alvo.hidden = false; IA.carregando(alvo, "A IA está mapeando os eventos para técnicas…"); return; }
+  if (estado.ia?.estado === "carregando") { alvo.hidden = false; IA.carregando(alvo, "A vigIA está mapeando os eventos para técnicas…"); return; }
   if (estado.ia?.estado === "erro") { alvo.hidden = false; IA.erro(alvo, estado.ia.erro, mapearComIA); return; }
   if (!estado.mapaIA) { alvo.hidden = true; return; }
 
@@ -349,12 +349,12 @@ function renderFaixaIA() {
     return ia && regra && ia !== regra;
   }).length;
 
-  const bloco = IA.bloco(estado.fonte === "ia" ? "Matriz com o mapeamento da IA" : "Mapeamento da IA disponível");
+  const bloco = IA.bloco(estado.fonte === "ia" ? "Matriz com o mapeamento da vigIA" : "Mapeamento da vigIA disponível");
   const texto = IA.criar("p", "",
-    `A IA ligou ${pelaIA} de ${todos.length} eventos a uma técnica; as regras fixas ligam ${pelasRegras}. ` +
+    `A vigIA ligou ${pelaIA} de ${todos.length} eventos a uma técnica; as regras fixas ligam ${pelasRegras}. ` +
     `${novos} ${plural(novos, "evento ganhou técnica", "eventos ganharam técnica")} e ${diferentes} ${plural(diferentes, "mudou", "mudaram")} de técnica. ` +
-    "Na tabela de cada técnica, a justificativa da IA aparece embaixo do evento.");
-  const trocar = IA.criar("button", "btn", estado.fonte === "ia" ? "Voltar às regras fixas" : "Usar o mapeamento da IA");
+    "Na tabela de cada técnica, a justificativa da vigIA aparece embaixo do evento.");
+  const trocar = IA.criar("button", "btn", estado.fonte === "ia" ? "Voltar às regras fixas" : "Usar o mapeamento da vigIA");
   trocar.type = "button";
   trocar.addEventListener("click", () => {
     estado.fonte = estado.fonte === "ia" ? "regras" : "ia";
@@ -383,7 +383,7 @@ function render() {
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.SecViewIA) {
-    const botao = window.SecViewIA.botao("Mapear com IA");
+    const botao = window.SecViewIA.botao("Mapear com a vigIA");
     botao.id = "mapear-ia";
     botao.addEventListener("click", mapearComIA);
     $(".mitre-topo .filtros").append(botao);

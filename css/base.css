@@ -172,6 +172,92 @@ button, input, select, textarea { font: inherit; }
 @keyframes ia-gira { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ia-estado.carregando::before { animation: none; } }
 
+/* ---------- Tela da IA (js/ia.js) ----------
+   Abre por cima de tudo enquanto a análise roda: a fechadura do
+   SecView olha para os lados e pisca; abaixo, as etapas, uma por vez. */
+.ia-tela {
+  width: min(400px, calc(100vw - 32px));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--cartao);
+  color: var(--texto);
+  box-shadow: 0 24px 60px rgba(8, 14, 20, .35);
+}
+.ia-tela::backdrop { background: rgba(8, 14, 20, .55); }
+.ia-tela[open] { animation: ia-tela-entra .32s cubic-bezier(.16, 1, .3, 1); }
+@keyframes ia-tela-entra { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+
+.ia-tela-corpo { display: grid; justify-items: center; padding: 30px 24px 16px; }
+.ia-tela h2 { margin: 16px 0 0; font-size: 17px; font-weight: 700; text-align: center; text-wrap: balance; }
+/* frase bem-humorada da vigIA: troca a cada ciclo do olho */
+.ia-tela-frase {
+  min-height: 2.9em; /* reserva duas linhas: a troca de frase não pula o cartão */
+  margin: 6px 0 0; max-width: 32ch;
+  font-size: 13px; line-height: 1.45; text-align: center; text-wrap: balance;
+  color: var(--suave);
+}
+.ia-tela-frase.entra { animation: ia-passo-entra .45s cubic-bezier(.16, 1, .3, 1); }
+
+/* fechadura: corpo na cor de destaque, olho "vazado" na cor do cartão */
+.ia-logo { width: 54px; height: 72px; overflow: visible; }
+.ia-logo .corpo, .ia-logo .iris-cor { fill: var(--destaque); }
+.ia-logo .branco { fill: var(--cartao); }
+.ia-logo .olho { transform-box: fill-box; transform-origin: center; animation: ia-piscar 5.2s ease-in-out infinite; }
+.ia-logo .iris { animation: ia-olhar 5.2s cubic-bezier(.65, 0, .35, 1) infinite; }
+/* olha para a esquerda, volta, olha para a direita, volta */
+@keyframes ia-olhar {
+  0%, 16%   { transform: translateX(0); }
+  24%, 40%  { transform: translateX(-2.7px); }
+  48%, 58%  { transform: translateX(0); }
+  66%, 82%  { transform: translateX(2.7px); }
+  90%, 100% { transform: translateX(0); }
+}
+/* pisca no centro, entre um olhar e outro */
+@keyframes ia-piscar {
+  0%, 50%, 54%, 94%, 98%, 100% { transform: scaleY(1); }
+  52%, 96% { transform: scaleY(.08); }
+}
+
+.ia-tela-passos {
+  list-style: none;
+  width: 100%;
+  min-height: 132px;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ia-tela-passos li { display: flex; align-items: flex-start; gap: 10px; color: var(--suave); }
+.ia-tela-passos li.atual { color: var(--texto); font-weight: 600; animation: ia-passo-entra .4s cubic-bezier(.16, 1, .3, 1); }
+@keyframes ia-passo-entra { from { opacity: 0; transform: translateY(5px); } }
+.ia-passo-ponto, .ia-passo-marca { flex: none; width: 14px; height: 14px; margin-top: 2px; }
+.ia-passo-ponto { position: relative; }
+.ia-passo-ponto::before {
+  content: ""; position: absolute; inset: 3px; border-radius: 50%;
+  background: var(--destaque);
+  animation: ia-ponto 1.2s ease-in-out infinite;
+}
+@keyframes ia-ponto { 50% { opacity: .35; } }
+.ia-passo-marca { fill: none; stroke: var(--sucesso-texto); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.ia-tela-rodape {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 20px; padding-top: 14px;
+  border-top: 1px solid var(--linha);
+  font-size: 12px; color: var(--suave);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ia-tela[open], .ia-tela-passos li.atual, .ia-tela-frase.entra, .ia-logo .olho, .ia-logo .iris, .ia-passo-ponto::before { animation: none; }
+}
+
 /* ---------- Filtros e campos ---------- */
 .filtros { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .filtro, .campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; color: var(--suave); }

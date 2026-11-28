@@ -254,17 +254,17 @@ function renderIA() {
 
   const st = analisesIA.get(alerta.id);
   if (!st) {
-    const btn = IA.botao("Analisar com IA");
+    const btn = IA.botao("Analisar com a vigIA");
     btn.addEventListener("click", () => analisarComIA(alerta));
-    const dica = criar("span", "rec-ia-dica", "A IA explica o alerta no contexto dos outros alertas deste host.");
+    const dica = criar("span", "rec-ia-dica", "A vigIA explica o alerta e confere se outros alertas do host fazem parte da mesma história.");
     alvo.replaceChildren(btn, dica);
     return;
   }
-  if (st.estado === "carregando") { IA.carregando(alvo, "Analisando o alerta…"); return; }
+  if (st.estado === "carregando") { IA.carregando(alvo, "A vigIA está analisando o alerta…"); return; }
   if (st.estado === "erro") { IA.erro(alvo, st.erro, () => analisarComIA(alerta)); return; }
 
   const r = st.resultado;
-  const bloco = IA.bloco("Análise da IA");
+  const bloco = IA.bloco("Análise da vigIA");
   bloco.append(criar("p", "", r.resumo), IA.secao("Por que importa", r.porQueImporta));
 
   const sev = criar("div", "ia-linha");

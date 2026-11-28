@@ -166,7 +166,7 @@ function renderDetalhe() {
     if (f.modificado) {
         const acoes = criar("div", "detalhe-acoes");
         if (window.SecViewIA) {
-            const ia = window.SecViewIA.botao("Analisar com IA");
+            const ia = window.SecViewIA.botao("Analisar com a vigIA");
             ia.id = "analisar-ia";
             ia.disabled = analisesIA.get(chaveIA(f))?.estado === "carregando";
             acoes.append(ia);
@@ -233,11 +233,11 @@ function renderFimIA(f, alvo) {
     const IA = window.SecViewIA;
     const st = analisesIA.get(chaveIA(f));
     if (!IA || !st) { alvo.hidden = true; return; }
-    if (st.estado === "carregando") { IA.carregando(alvo, "A IA está lendo o diff…"); return; }
+    if (st.estado === "carregando") { IA.carregando(alvo, "A vigIA está lendo o diff…"); return; }
     if (st.estado === "erro") { IA.erro(alvo, st.erro, () => analisarFimIA(f)); return; }
 
     const r = st.resultado;
-    const bloco = IA.bloco("Análise da IA");
+    const bloco = IA.bloco("Análise da vigIA");
     const [classe, rotulo] = VEREDITO[r.veredito];
     const linha = criar("div", "ia-linha");
     linha.append(criar("span", classe, rotulo), criar("span", "chip sev-" + r.severidade, SEV[r.severidade]));

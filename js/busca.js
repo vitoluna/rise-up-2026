@@ -207,12 +207,12 @@
   function grupoIA(texto) {
     const grupo = criar("div", "busca-grupo");
     grupo.setAttribute("role", "group");
-    grupo.setAttribute("aria-label", "Perguntar à IA");
-    grupo.append(criar("p", "busca-grupo-nome", "Perguntar à IA"));
+    grupo.setAttribute("aria-label", "Perguntar à vigIA");
+    grupo.append(criar("p", "busca-grupo-nome", "Perguntar à vigIA"));
     const op = novaOpcao("busca-op-ia");
     op.dataset.pergunta = texto.slice(0, 300);
     const corpo = criar("span", "busca-corpo");
-    corpo.append(criar("b", "busca-titulo", `“${texto}”`), criar("span", "busca-detalhe", "A IA responde com base nos dados do SecView"));
+    corpo.append(criar("b", "busca-titulo", `“${texto}”`), criar("span", "busca-detalhe", "A vigIA responde com base nos dados do SecView"));
     op.append(window.SecViewIA.icone(), corpo);
     grupo.append(op);
     return grupo;
@@ -228,8 +228,8 @@
     lista.replaceChildren(area);
     lista.hidden = false;
     campo.setAttribute("aria-expanded", "true");
-    IA.carregando(area, "A IA está procurando a resposta nos dados…");
-    aviso.textContent = "Perguntando à IA.";
+    IA.carregando(area, "A vigIA está vasculhando os registros…");
+    aviso.textContent = "Perguntando à vigIA.";
 
     let r;
     try {
@@ -242,7 +242,7 @@
     }
     if (n !== pedidoIA || !area.isConnected) return; // o texto mudou ou a lista fechou
 
-    const bloco = IA.bloco("Resposta da IA");
+    const bloco = IA.bloco("Resposta da vigIA");
     bloco.append(criar("p", "busca-ia-pergunta", `“${pergunta}”`));
     r.resposta.split(/\n+/).filter(Boolean).forEach((par) => bloco.append(criar("p", "", par)));
 
@@ -270,7 +270,7 @@
     }
     bloco.append(IA.nota());
     area.replaceChildren(bloco);
-    aviso.textContent = `Resposta da IA: ${r.resposta}`;
+    aviso.textContent = `Resposta da vigIA: ${r.resposta}`;
   }
 
   function mostrar() {
@@ -287,11 +287,11 @@
     if (!achados.length) {
       const vazio = criar("p", "busca-vazio");
       vazio.append("Nada encontrado para ", criar("b", "", `“${texto}”`), comIA
-        ? ". Faça a pergunta à IA, que responde com base nos dados do SecView."
+        ? ". Pergunte à vigIA, que responde com base nos dados do SecView."
         : ". Tente o nome de uma tela, um host (host-db-01), um evento (brute force) ou um arquivo (/etc/passwd).");
       lista.append(vazio);
       if (comIA) lista.append(grupoIA(texto));
-      aviso.textContent = comIA ? "Nenhum resultado. Opção: perguntar à IA." : "Nenhum resultado.";
+      aviso.textContent = comIA ? "Nenhum resultado. Opção: perguntar à vigIA." : "Nenhum resultado.";
     } else {
       const grupos = new Map();
       achados.forEach((item) => {
@@ -333,7 +333,8 @@
 
   /* ---------- Interação ---------- */
   campo.addEventListener("input", mostrar);
-  campo.addEventListener("focus", () => { if (campo.value.trim()) mostrar(); });
+  // ao voltar o foco (ex.: quando a tela da IA fecha), não apaga a resposta da IA
+  campo.addEventListener("focus", () => { if (campo.value.trim() && !lista.querySelector(".busca-ia")) mostrar(); });
 
   campo.addEventListener("keydown", (e) => {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -368,7 +369,11 @@
   // composedPath: o clique pode trocar o conteúdo da lista (ex.: Perguntar à IA)
   // antes de chegar aqui, e aí o alvo já saiu da página
   document.addEventListener("click", (e) => { if (!e.composedPath().includes(caixa)) fechar(); });
-  caixa.addEventListener("focusout", (e) => { if (!caixa.contains(e.relatedTarget)) fechar(); });
+  // a tela da IA (js/ia.js) puxa o foco enquanto responde: a lista continua aberta
+  caixa.addEventListener("focusout", (e) => {
+    if (window.SecViewIA && window.SecViewIA.ocupado()) return;
+    if (!caixa.contains(e.relatedTarget)) fechar();
+  });
 
   // "/" ou Ctrl+K levam ao campo, de qualquer ponto da tela
   document.addEventListener("keydown", (e) => {

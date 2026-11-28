@@ -226,7 +226,7 @@ document.getElementById('hosts').insertAdjacentHTML('beforeend', topHosts.map(h 
         mitre: ['MITRE ATT&CK', 'mitre.html'],
     };
     const txt = el => (el && el.textContent ? el.textContent : '').trim().slice(0, 120);
-    const botao = IA.botao('Gerar resumo');
+    const botao = IA.botao('Pedir à vigIA');
     acao.append(botao);
 
     function painel() {
@@ -263,10 +263,10 @@ document.getElementById('hosts').insertAdjacentHTML('beforeend', topHosts.map(h 
     async function gerar() {
         botao.disabled = true;
         corpo.hidden = false;
-        IA.carregando(corpo, 'Lendo os números do turno…');
+        IA.carregando(corpo, 'A vigIA está lendo os números do turno…');
         try {
             render(await IA.pedir('resumo', painel()));
-            botao.querySelector('span').textContent = 'Gerar de novo';
+            botao.querySelector('span').textContent = 'Pedir de novo';
         } catch (e) {
             IA.erro(corpo, e.message, gerar);
         } finally {

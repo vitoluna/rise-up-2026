@@ -58,7 +58,7 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
 ### Com as análises de IA
 
-As análises com IA (Claude Haiku 5.5) rodam num servidor próprio, que guarda a chave da API:
+A **vigIA**, a IA do SecView (o nome é um trocadilho com "vigia"), usa o Claude Haiku 5.5 e roda num servidor próprio, que guarda a chave da API:
 
 ```bash
 npm install
