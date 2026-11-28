@@ -186,6 +186,16 @@ const servidor = http.createServer(async (req, res) => {
   return servirArquivo(req, res, url.pathname === "/" ? "/index.html" : url.pathname);
 });
 
+// Porta ocupada: explica em vez de despejar o erro do Node
+servidor.on("error", (erro) => {
+  if (erro.code === "EADDRINUSE") {
+    console.error(`A porta ${PORTA} já está em uso: provavelmente o SecView já está rodando em outro terminal.`);
+    console.error(`Feche o outro terminal (Ctrl+C nele) ou use outra porta, ex.: PORT=3001 no arquivo .env.`);
+    process.exit(1);
+  }
+  throw erro;
+});
+
 servidor.listen(PORTA, () => {
   console.log(`SecView em http://localhost:${PORTA}  (vigIA: ${ia.MODELO})`);
 });
